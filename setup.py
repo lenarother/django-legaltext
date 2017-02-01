@@ -9,7 +9,8 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 install_requires = [
     'Django>=1.9',
-    'django-markymark>=1.0.0,<1.1'
+    'django-markymark>=1.0.0,<1.1',
+    'pytz'
 ]
 
 version = '0.1'
