@@ -1,0 +1,16 @@
+# Testing / mock app
+db.sqlite3
+
+# Bytes
+__pycache__/
+legaltext/tests/__pycache__/
+*.pyc
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Translations
+*.mo
