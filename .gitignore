@@ -3,7 +3,6 @@ db.sqlite3
 
 # Bytes
 __pycache__/
-legaltext/tests/__pycache__/
 *.pyc
 
 # Distribution / packaging

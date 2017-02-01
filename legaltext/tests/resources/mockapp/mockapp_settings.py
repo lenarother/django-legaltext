@@ -3,7 +3,9 @@ import tempfile
 
 DEBUG = True
 
-SECRET_KEY = 'testing'
+SECRET_KEY = 'mockapp'
+
+USE_TZ = True
 
 DATABASES = {
     'default': {
@@ -18,6 +20,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
 
     'markymark',
     'legaltext',
@@ -34,6 +37,12 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = tempfile.mkdtemp()
 STATIC_URL = '/static/'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
