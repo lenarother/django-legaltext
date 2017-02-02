@@ -35,7 +35,6 @@ class LegalTextVersion(models.Model):
     valid_from = models.DateTimeField(_('Valid from'), default=timezone.now)
 
     content = MarkdownField(_('Text'))
-    checkbox_label = models.TextField(_('Checkbox label'), default=_('I accept.'))
 
     class Meta:
         verbose_name = _('Legal text version')
@@ -45,3 +44,24 @@ class LegalTextVersion(models.Model):
     def __str__(self):
         return '{0} ({1:%x %X})'.format(
             self.legaltext.name, timezone.localtime(self.valid_from))
+
+
+class CheckboxTextVersion(models.Model):
+    legaltext_version = models.ForeignKey(
+        LegalTextVersion, verbose_name=_('Legal text version'),)
+
+    content = MarkdownField(_('Text'))
+    anchor = models.CharField(_('Anchor'), max_length=64, blank=True)
+
+    class Meta:
+        verbose_name = _('Checkbox')
+        verbose_name_plural = _('Checkbox')
+        ordering = ('legaltext_version',)
+
+    def __str__(self):
+        name = 'Checkbox'
+        if self.anchor:
+            name += ' (with {0} anchor)'.format(self.anchor)
+        return '{0} for {1} ({2:%x %X})'.format(
+            name, self.legaltext_version.legaltext.name,
+            timezone.localtime(self.legaltext_version.valid_from))
