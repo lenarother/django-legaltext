@@ -1,11 +1,34 @@
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.utils.functional import curry
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from markymark.utils import render_markdown
 
-from .models import LegalText, LegalTextVersion
+from .models import CheckboxTextVersion, LegalText, LegalTextVersion
+
+
+class CheckboxTextVersionInline(admin.StackedInline):
+    model = CheckboxTextVersion
+    extra = 3
+
+    def get_formset(self, request, obj=None, **kwargs):
+        initial = []
+        if request.method == "GET":
+            version = LegalText.objects.get(pk=request.GET['legaltext']).get_current_version()
+            checkboxes = version.checkboxtextversion_set.all()
+
+            for checkbox in checkboxes:
+                initial.append({
+                    'content': checkbox.content,
+                    'anchor': checkbox.anchor
+                })
+            self.extra = len(initial) or 1
+        formset = super(CheckboxTextVersionInline, self).get_formset(request, obj, **kwargs)
+        formset.__init__ = curry(formset.__init__, initial=initial)
+
+        return formset
 
 
 @admin.register(LegalText)
@@ -42,6 +65,14 @@ class LegalTextAdmin(admin.ModelAdmin):
 class LegalTextVersionAdmin(admin.ModelAdmin):
     list_display = ('legaltext_name', 'valid_from')
     list_filter = ('legaltext',)
+    inlines = (CheckboxTextVersionInline,)
+
+    def get_form(self, request, obj=None, **kwargs):
+        previous_text = self.model.objects.filter(
+            legaltext=request.GET['legaltext']).first().content
+        form = super(LegalTextVersionAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['content'].initial = previous_text
+        return form
 
     def get_fieldsets(self, request, obj=None):
         return super().get_fieldsets(request, obj) if obj is None else (
@@ -49,7 +80,6 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
                 'legaltext',
                 'valid_from',
                 'rendered_content',
-                'rendered_checkbox_label'
             )}),
         )
 
@@ -69,8 +99,3 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
         return render_markdown(obj.content)
     rendered_content.allow_tags = True
     rendered_content.short_description = _('Text')
-
-    def rendered_checkbox_label(self, obj):
-        return obj.checkbox_label
-    rendered_checkbox_label.allow_tags = True
-    rendered_checkbox_label.short_description = _('Checkbox label')
