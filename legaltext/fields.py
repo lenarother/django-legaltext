@@ -6,6 +6,13 @@ from django.utils.safestring import mark_safe
 from .models import LegalText, LegalTextVersion
 
 
+def add_legaltext_checkboxes(fields, slug):
+    version = LegalText.current_version(slug)
+    for counter, checkbox in enumerate(version.checkboxtextversion_set.all()):
+        field_name = 'Checkbox_{}_{}'.format(counter, version.pk)
+        fields[field_name] = LegalTextCheckboxFormField(checkbox)
+
+
 @deconstructible
 class CurrentLegalText(object):
 
@@ -16,14 +23,14 @@ class CurrentLegalText(object):
         return LegalText.current_version(self.slug)
 
 
-class LegalTextFormField(forms.BooleanField):
+class LegalTextCheckboxFormField(forms.BooleanField):
 
-    def __init__(self, slug, *args, **kwargs):
-        self.slug = slug
+    def __init__(self, checkbox, *args, **kwargs):
+        self.checkbox = checkbox
         super().__init__(*args, **kwargs)
 
     label = property(
-        lambda s: mark_safe(LegalText.current_version(s.slug).checkbox_label),
+        lambda s: mark_safe(s.checkbox.get_content()),
         lambda s, v: v
     )
 
@@ -33,7 +40,7 @@ class LegalTextFormField(forms.BooleanField):
     def to_python(self, value):
         if not value or value in self.empty_values:
             return None
-        return LegalText.current_version(self.slug)
+        return self.checkbox
 
 
 class LegalTextField(models.ForeignKey):

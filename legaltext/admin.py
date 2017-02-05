@@ -95,13 +95,6 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
                 'valid_from',
                 'rendered_content')}),
             )
-        # return super().get_fieldsets(request, obj) if obj is None else (
-        #     (None, {'fields': (
-        #         'legaltext',
-        #         'valid_from',
-        #         'rendered_content',
-        #     )}),
-        # )
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.valid_from <= timezone.now():

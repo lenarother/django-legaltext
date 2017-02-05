@@ -1,3 +1,6 @@
+import re
+
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -45,6 +48,9 @@ class LegalTextVersion(models.Model):
         return '{0} ({1:%x %X})'.format(
             self.legaltext.name, timezone.localtime(self.valid_from))
 
+    def get_content(self):
+        return self.content
+
 
 class CheckboxTextVersion(models.Model):
     legaltext_version = models.ForeignKey(
@@ -55,7 +61,7 @@ class CheckboxTextVersion(models.Model):
 
     class Meta:
         verbose_name = _('Checkbox')
-        verbose_name_plural = _('Checkbox')
+        verbose_name_plural = _('Checkboxes')
         ordering = ('legaltext_version',)
 
     def __str__(self):
@@ -65,3 +71,26 @@ class CheckboxTextVersion(models.Model):
         return '{0} for {1} ({2:%x %X})'.format(
             name, self.legaltext_version.legaltext.name,
             timezone.localtime(self.legaltext_version.valid_from))
+
+    @property
+    def slug(self):
+        return self.legaltext_version.legaltext.slug
+
+    def get_content(self, privacy=False):
+        """
+        Includes url to legaltext in checkbox content text
+        Uses word in squer brackets e.g. [[privacy terms]]
+
+        Returns:
+            checkbox lablel as string contailing url
+
+        """
+        legaltext_url = reverse('legaltext', kwargs={'slug': self.slug})
+        if self.anchor:
+            legaltext_url += '#{0}'.format(self.anchor)
+
+        return re.sub(
+            '\[\[(.*)\]\]',
+            '<a href="{0}" title="\g<1>">\g<1></a>'.format(legaltext_url),
+            self.content
+        )
