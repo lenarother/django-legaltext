@@ -17,3 +17,4 @@ Resources
 =========
 
 * `Code <https://github.com/moccu/django-legaltext>`_
+* `Usage example <https://github.com/moccu/django-legaltext/tree/master/legaltext/tests/resources>`_
