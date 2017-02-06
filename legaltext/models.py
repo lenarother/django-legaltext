@@ -37,7 +37,8 @@ class LegalTextVersion(models.Model):
     legaltext = models.ForeignKey(LegalText, verbose_name=_('Legal text'),)
     valid_from = models.DateTimeField(_('Valid from'), default=timezone.now)
 
-    content = MarkdownField(_('Text'))
+    content = MarkdownField(_('Text'), help_text=_(
+        'Optional: use [[checkbox-anchor-name]] text ... [[end]] to insert checkbox anchor'))
 
     class Meta:
         verbose_name = _('Legal text version')
@@ -75,7 +76,8 @@ class CheckboxTextVersion(models.Model):
     legaltext_version = models.ForeignKey(
         LegalTextVersion, verbose_name=_('Legal text version'),)
 
-    content = MarkdownField(_('Text'))
+    content = MarkdownField(_('Text'), help_text=_(
+        'Use [[word]] to indicate the word used as a link to the legaltext content.'))
     anchor = models.CharField(_('Anchor'), max_length=64, blank=True)
 
     class Meta:
