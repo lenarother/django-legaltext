@@ -2,7 +2,8 @@
 legaltext
 =========
 
-legaltext is a django application supportin versioning of legal texts (e.g. prticipation terms or privacy terms). It supports also versioning of checkbox labels.
+Legaltext is a Django application supporting versioning of legal texts (e.g. participation terms
+or privacy terms). It also supports versioning of checkbox labels.
 
 
 Features
