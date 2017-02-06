@@ -49,7 +49,26 @@ class LegalTextVersion(models.Model):
             self.legaltext.name, timezone.localtime(self.valid_from))
 
     def get_content(self):
-        return self.content
+        """
+        Changes [[anchor]] and [[end]] keywords into div
+
+        Returns:
+            legaltext text including formatting as string
+
+        """
+        legaltext_content = re.sub(
+            '\[\[end\]\]',
+            '</div>',
+            self.content
+        )
+
+        legaltext_content = re.sub(
+            '\[\[(.*)\]\]',
+            '<div class="\g<1>"><span class="anchor" id="\g<1>"></span>',
+            legaltext_content
+        )
+
+        return legaltext_content
 
 
 class CheckboxTextVersion(models.Model):
