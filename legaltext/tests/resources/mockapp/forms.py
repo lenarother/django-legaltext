@@ -17,4 +17,4 @@ class MockappParticipationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_legaltext_checkboxes(self.fields, MOCKAPP_TERMS_SLUG)
-        add_legaltext_checkboxes(self.fields,  MOCKAPP_PRIVACY_SLUG)
+        add_legaltext_checkboxes(self.fields, MOCKAPP_PRIVACY_SLUG)
