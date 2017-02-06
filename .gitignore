@@ -10,6 +10,3 @@ build/
 dist/
 *.egg-info/
 *.egg
-
-# Translations
-*.mo
