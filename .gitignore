@@ -1,5 +1,9 @@
 # Testing / mock app
 db.sqlite3
+.coverage
+coverage.xml
+.tox/
+/junit-*.xml
 
 # Bytes
 __pycache__/
