@@ -36,7 +36,12 @@ test_requires = [
 setup(
     name='django-legaltext',
     version=version,
-    packages=find_packages(),
+    packages=find_packages(exclude=[
+        'legaltext.tests',
+        'legaltext.tests.factories',
+        'legaltext.tests.resources',
+        'legaltext.tests.tests',
+    ]),
     include_package_data=True,
     license='BSD License',  # example license
     description='A simple Django app to manage legal text versions.',
