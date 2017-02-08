@@ -5,6 +5,7 @@ DEBUG = True
 
 SECRET_KEY = 'testing'
 
+TIME_ZONE = 'Europe/Berlin'
 USE_TZ = True
 
 DATABASES = {
