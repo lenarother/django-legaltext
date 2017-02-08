@@ -29,6 +29,8 @@ INSTALLED_APPS = (
 
 ROOT_URLCONF = 'django.contrib.auth.urls'
 
+ROOT_URLCONF = 'legaltext.urls'
+
 SITE_ID = 1
 LANGUAGES = (('en-us', 'en-us'),)
 

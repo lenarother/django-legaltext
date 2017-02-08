@@ -79,13 +79,52 @@ class TestLegalTextVersion:
 
         assert 'Foo Bar Text' in str(legal_text_version)
 
+    def test_get_content(self):
+        legal_text_version = LegalTextVersionFactory.create(content='Text Text Text')
+
+        assert legal_text_version.get_content() == 'Text Text Text'
+
+    def test_get_content_with_anchor(self):
+        legal_text_version = LegalTextVersionFactory.create(
+            content='Text [[foo]]Text[[end]] Text')
+
+        assert legal_text_version.get_content() == (
+            'Text <div class="foo"><span class="anchor" id="foo"></span>Text</div> Text')
+
 
 @pytest.mark.django_db
 class TestCheckboxTextVersion:
 
     def test_str(self):
-        checkbox_text_version = CheckboxTextVersionFactory.create(
+        checkbox = CheckboxTextVersionFactory.create(
             legaltext_version__legaltext__name='Foo Bar Text')
 
-        assert 'Foo Bar Text' in str(checkbox_text_version)
-        assert 'Checkbox' in str(checkbox_text_version)
+        assert 'Foo Bar Text' in str(checkbox)
+        assert 'Checkbox' in str(checkbox)
+
+    def test_slug(self):
+        checkbox = CheckboxTextVersionFactory.create(
+            legaltext_version__legaltext__slug='foo-bar-text')
+
+        assert checkbox.slug == 'foo-bar-text'
+
+    def test_get_content(self):
+        checkbox = CheckboxTextVersionFactory.create(content='Checkbox test text', )
+
+        assert checkbox.get_content() == 'Checkbox test text'
+
+    def test_get_content_with_link(self):
+        checkbox = CheckboxTextVersionFactory.create(
+            content='Checkbox [[test]] text', anchor='',
+            legaltext_version__legaltext__slug='test-1')
+
+        assert checkbox.get_content() == (
+            'Checkbox <a href="/test-1" title="test">test</a> text')
+
+    def test_get_content_with_link_and_anchor(self):
+        checkbox = CheckboxTextVersionFactory.create(
+            content='Checkbox [[test]] text', anchor='important',
+            legaltext_version__legaltext__slug='test-2')
+
+        assert checkbox.get_content() == (
+            'Checkbox <a href="/test-2#important" title="test">test</a> text')
