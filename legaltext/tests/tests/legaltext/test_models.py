@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytest
+import pytz
 from freezegun import freeze_time
 
 from legaltext.models import LegalText, LegalTextVersion
@@ -27,13 +28,14 @@ class TestLegalText:
     @freeze_time('2016-01-02')
     def test_current_version(self):
         legal_text = LegalTextFactory.create(name='Foo Bar Text', slug='foo-bar')
+        utc = pytz.utc
 
         LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2015, 1, 1, 10, 0))
+            legaltext=legal_text, valid_from=utc.localize(datetime(2015, 1, 1, 10, 0)))
         version_present = LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2016, 1, 1, 10, 0))
+            legaltext=legal_text, valid_from=utc.localize(datetime(2016, 1, 1, 10, 0)))
         LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2017, 1, 1, 10, 0))
+            legaltext=legal_text, valid_from=utc.localize(datetime(2017, 1, 1, 10, 0)))
 
         version = LegalText.current_version('foo-bar')
 
@@ -52,15 +54,16 @@ class TestLegalText:
     @freeze_time('2016-01-02')
     def test_get_current_version(self):
         legal_text = LegalTextFactory.create(name='Foo Bar Text', slug='foo-bar-test')
+        utc = pytz.utc
 
         LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2015, 1, 1, 10, 0),
+            legaltext=legal_text, valid_from=utc.localize(datetime(2015, 1, 1, 10, 0)),
             content='Test content 1')
         version_present = LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2016, 1, 1, 10, 0),
+            legaltext=legal_text, valid_from=utc.localize(datetime(2016, 1, 1, 10, 0)),
             content='Test content 2')
         LegalTextVersionFactory.create(
-            legaltext=legal_text, valid_from=datetime(2017, 1, 1, 10, 0),
+            legaltext=legal_text, valid_from=utc.localize(datetime(2017, 1, 1, 10, 0)),
             content='Test content 3')
 
         version = legal_text.get_current_version()
