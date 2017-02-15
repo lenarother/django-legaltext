@@ -22,6 +22,7 @@ test_requires = [
     'pytest-cache>=1.0',
     'pytest-cov>=2.1.0',
     'pytest-flakes>=1.0.1',
+    'pytest-isort==0.1.0',
     'pytest-pep8>=1.0.6',
     'pytest-django==2.9.1',
     'fake-factory==0.7.4',

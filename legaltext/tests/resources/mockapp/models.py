@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from legaltext.fields import LegalTextField
 
-from .constants import MOCKAPP_TERMS_SLUG, MOCKAPP_PRIVACY_SLUG
+from .constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
 
 
 class MockSurveyParticipant(models.Model):

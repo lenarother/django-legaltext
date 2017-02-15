@@ -1,6 +1,6 @@
 import factory
-from django.utils.text import slugify
 from django.utils import timezone
+from django.utils.text import slugify
 
 from legaltext.models import CheckboxTextVersion, LegalText, LegalTextVersion
 

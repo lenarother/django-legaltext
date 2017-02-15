@@ -2,7 +2,7 @@ from django.forms import ModelForm
 
 from legaltext.fields import add_legaltext_checkboxes
 
-from .constants import MOCKAPP_TERMS_SLUG, MOCKAPP_PRIVACY_SLUG
+from .constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
 from .models import MockSurveyParticipant
 
 

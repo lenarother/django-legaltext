@@ -4,6 +4,7 @@ db.sqlite3
 coverage.xml
 .tox/
 /junit-*.xml
+.cache/
 
 # Bytes
 __pycache__/
