@@ -7,6 +7,14 @@ from .models import LegalText, LegalTextVersion
 
 
 def add_legaltext_checkboxes(fields, slug):
+    """
+    Fetch current version of legal text with given slug
+    Adds all its checkboxes to formular fields
+
+    Args:
+        formular fields (self.fields in form __init__)
+        legal text slug
+    """
     version = LegalText.current_version(slug)
     for counter, checkbox in enumerate(version.checkboxtextversion_set.all()):
         field_name = 'Checkbox_{}_{}'.format(counter, version.pk)
