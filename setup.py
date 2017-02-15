@@ -27,6 +27,7 @@ test_requires = [
     'pytest-django==2.9.1',
     'fake-factory==0.7.4',
     'factory-boy>=2.7.0,<2.8',
+    'freezegun>=0.3.7,<0.4',
     'coverage>=4.0',
     'mock>=1.3.0',
     'pep8>=1.6.2',
