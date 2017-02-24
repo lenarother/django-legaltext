@@ -122,7 +122,7 @@ class TestCheckboxTextVersion:
             legaltext_version__legaltext__slug='test-1')
 
         assert checkbox.get_content() == (
-            'Checkbox <a href="/test-1" title="test">test</a> text')
+            'Checkbox <a href="/test-1/" title="test">test</a> text')
 
     def test_get_content_with_link_and_anchor(self):
         checkbox = CheckboxTextVersionFactory.create(
@@ -130,4 +130,4 @@ class TestCheckboxTextVersion:
             legaltext_version__legaltext__slug='test-2')
 
         assert checkbox.get_content() == (
-            'Checkbox <a href="/test-2#important" title="test">test</a> text')
+            'Checkbox <a href="/test-2/#important" title="test">test</a> text')
