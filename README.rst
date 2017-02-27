@@ -23,7 +23,7 @@ requirements.txt
 
 ::
 
-    git+https://github.com/moccu/django-legaltext.git
+    git+https://PRIVATE_TOKEN@github.com/moccu/django-legaltext.git#egg=django-legaltext
 
 
 urls.py
