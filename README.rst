@@ -26,6 +26,18 @@ requirements.txt
     git+https://PRIVATE_TOKEN@github.com/moccu/django-legaltext.git#egg=django-legaltext
 
 
+settings.py
+~~~~~~~~~~~
+
+::
+
+    INSTALLED_APPS = (
+        ...
+        'markymark',  # required for markdown
+        'legaltext',
+    )
+
+
 urls.py
 ~~~~~~~
 
@@ -42,18 +54,6 @@ templates
 
 To overwrite basic legaltext template which displas legaltext content place
 legaltext/content.html in your templates directory
-
-
-settings.py
-~~~~~~~~~~~
-
-::
-
-    INSTALLED_APPS = (
-        ...
-        'markymark',  # required for markdown 
-        'legaltext',
-    )
 
 
 models.py
