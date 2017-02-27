@@ -23,7 +23,7 @@ requirements.txt
 
 ::
 
-    git+https://github.com/kidig/django-mailjet.git@b1aa8f9#egg=django-mailjet
+    git+https://github.com/moccu/django-legaltext.git
 
 
 urls.py
