@@ -1,7 +1,9 @@
+import pickle
 from django import forms
 from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 
 from .models import LegalText, LegalTextVersion
 
@@ -49,6 +51,55 @@ class LegalTextCheckboxFormField(forms.BooleanField):
         if not value or value in self.empty_values:
             return None
         return self.checkbox
+
+
+class MultipleCheckboxWidget(forms.widgets.MultiWidget):
+    def __init__(self, checkboxes, attrs=None):
+        self.checkboxes = checkboxes
+        widgets = [forms.CheckboxInput() for checkbox in checkboxes]
+        super(MultipleCheckboxWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return pickle.loads(value)
+        else:
+            return ['', '']
+
+    # def format_output(self, rendered_widgets):
+    #     return ''.join(rendered_widgets)
+
+    def format_output(self, rendered_widgets):
+        # import ipdb; ipdb.set_trace()
+        return mark_safe(u'<p class="placewidget">%s <br />%s</p>' % (
+            rendered_widgets[0], 'tralala'
+           
+        ))
+
+
+class CheckboxFormField(forms.fields.MultiValueField):
+    #widget = MultipleCheckboxWidget
+    # label = property(
+    #     lambda s: mark_safe(LegalText.current_version(s).checkboxtextversion_set[0].get_content()),
+    #     lambda s, v: v
+    # )
+
+    def __init__(self, slug=None, to=LegalTextVersion, **kwargs):
+        self.slug = slug
+        error_messages = {
+            'incomplete': 'This field is required',
+        }
+        text = LegalText.current_version(slug)
+        checkboxes = text.checkboxtextversion_set.all()
+        fields_list = [forms.BooleanField(label='bla') for checkbox in checkboxes]
+        fields = tuple(fields_list)
+        labels = [checkbox.get_content() for checkbox in checkboxes]
+        self.widget = MultipleCheckboxWidget(checkboxes)
+        super().__init__(
+            error_messages=error_messages, fields=fields,
+            require_all_fields=True, label='bla bla bla', **kwargs)
+
+    def compress(self, data_list):
+        pass
 
 
 class LegalTextField(models.ForeignKey):
