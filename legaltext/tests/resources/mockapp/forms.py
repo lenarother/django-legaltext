@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 
 from legaltext.fields import (LegalTextCheckboxFormField,
-                              add_legaltext_checkboxes)
+                              add_legaltext_checkboxes, CheckboxFormField)
 from legaltext.models import LegalText
 
 from .constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
@@ -24,4 +24,5 @@ class MockappParticipationForm(ModelForm):
         self.fields['accepted_terms'] = LegalTextCheckboxFormField(terms_checkbox)
 
         # add all fields automatically
-        add_legaltext_checkboxes(self.fields, MOCKAPP_PRIVACY_SLUG)
+        # add_legaltext_checkboxes(self.fields, MOCKAPP_PRIVACY_SLUG)
+        self.fields['privasy'] = CheckboxFormField(MOCKAPP_PRIVACY_SLUG)
