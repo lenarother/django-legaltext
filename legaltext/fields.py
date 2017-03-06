@@ -54,52 +54,54 @@ class LegalTextCheckboxFormField(forms.BooleanField):
 
 
 class MultipleCheckboxWidget(forms.widgets.MultiWidget):
+
     def __init__(self, checkboxes, attrs=None):
         self.checkboxes = checkboxes
         widgets = [forms.CheckboxInput() for checkbox in checkboxes]
         super(MultipleCheckboxWidget, self).__init__(widgets, attrs)
 
+    def value_from_datadict(self, data, files, name):
+        # import ipdb; ipdb.set_trace()
+
+        for key in data:
+            if key.startswith(name):
+                if data[key][0] != 'on':
+                    return False
+        return True
+
     def decompress(self, value):
+        import ipdb; ipdb.set_trace()
         if value:
             return pickle.loads(value)
         else:
             return ['', '']
 
-    # def format_output(self, rendered_widgets):
-    #     return ''.join(rendered_widgets)
-
     def format_output(self, rendered_widgets):
-        # import ipdb; ipdb.set_trace()
-        return mark_safe(u'<p class="placewidget">%s <br />%s</p>' % (
-            rendered_widgets[0], 'tralala'
-           
-        ))
+        # This will work until django 1.10.
+        # In django 1.11 format_output is removed
+        # https://docs.djangoproject.com/en/dev/releases/1.11/
+        result = ''
+        for x, y in zip(rendered_widgets, self.checkboxes):
+            result += u'<p class="placewidget">%s %s</p>' % (
+                x, y.get_content())
+        return mark_safe(result)
 
 
-class CheckboxFormField(forms.fields.MultiValueField):
-    #widget = MultipleCheckboxWidget
-    # label = property(
-    #     lambda s: mark_safe(LegalText.current_version(s).checkboxtextversion_set[0].get_content()),
-    #     lambda s, v: v
-    # )
+class MultiCheckboxFormField(forms.fields.MultiValueField):
 
     def __init__(self, slug=None, to=LegalTextVersion, **kwargs):
-        self.slug = slug
-        error_messages = {
-            'incomplete': 'This field is required',
-        }
+        error_messages = {'incomplete': _('This field is required')}
         text = LegalText.current_version(slug)
         checkboxes = text.checkboxtextversion_set.all()
-        fields_list = [forms.BooleanField(label='bla') for checkbox in checkboxes]
+        fields_list = [forms.BooleanField() for checkbox in checkboxes]
         fields = tuple(fields_list)
-        labels = [checkbox.get_content() for checkbox in checkboxes]
         self.widget = MultipleCheckboxWidget(checkboxes)
         super().__init__(
             error_messages=error_messages, fields=fields,
-            require_all_fields=True, label='bla bla bla', **kwargs)
+            require_all_fields=True, **kwargs)
 
     def compress(self, data_list):
-        pass
+        return all(x is True for x in data_list)
 
 
 class LegalTextField(models.ForeignKey):
