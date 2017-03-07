@@ -60,21 +60,11 @@ class MultipleCheckboxWidget(forms.widgets.MultiWidget):
         widgets = [forms.CheckboxInput() for checkbox in checkboxes]
         super(MultipleCheckboxWidget, self).__init__(widgets, attrs)
 
-    def value_from_datadict(self, data, files, name):
-        # import ipdb; ipdb.set_trace()
-
-        for key in data:
-            if key.startswith(name):
-                if data[key][0] != 'on':
-                    return False
-        return True
-
     def decompress(self, value):
-        import ipdb; ipdb.set_trace()
         if value:
             return pickle.loads(value)
         else:
-            return ['', '']
+            return [False for checkbox in self.checkboxes]
 
     def format_output(self, rendered_widgets):
         # This will work until django 1.10.
