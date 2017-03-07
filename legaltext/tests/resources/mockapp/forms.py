@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 
 from legaltext.fields import (LegalTextCheckboxFormField,
-                              add_legaltext_checkboxes, MultiCheckboxFormField)
+                              MultiCheckboxFormField, add_legaltext_checkboxes)
 from legaltext.models import LegalText
 
 from .constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
