@@ -10,7 +10,7 @@ from markymark.fields import MarkdownField
 
 class LegalText(models.Model):
     name = models.CharField(_('Legal text'), max_length=64)
-    slug = models.SlugField(_('Slug'), max_length=32, unique=True)
+    slug = models.SlugField(_('Slug'), max_length=64, unique=True)
 
     class Meta:
         verbose_name = _('Legal text')
