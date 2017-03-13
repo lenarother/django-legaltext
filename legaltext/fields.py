@@ -109,3 +109,42 @@ class LegalTextField(models.ForeignKey):
         name, path, args, kwargs = super().deconstruct()
         kwargs['slug'] = self.slug
         return name, path, args, kwargs
+
+    def to_python(self, value):
+        # import ipdb; ipdb.set_trace()
+        if not value or value in self.empty_values:
+            return None
+        # return self.checkbox
+        try:
+            LegalTextVersion.objects.get(pk=value)
+        except LegalTextVersion.DoesNotExist:
+            return None
+        return value
+
+
+class CheckboxWidget(forms.widgets.MultiWidget):
+
+    def __init__(self, slug, attrs=None):
+        self.checkboxes = LegalText.current_version(slug).checkboxtextversion_set.all()
+        self.version = LegalText.current_version(slug)
+        widgets = [forms.CheckboxInput() for checkbox in self.checkboxes]
+        super(CheckboxWidget, self).__init__(widgets, attrs)
+
+    def value_from_datadict(self, data, files, name):
+        return self.version.pk
+
+    def decompress(self, value):
+        if value:
+            return [True for checkbox in self.checkboxes]
+        else:
+            return [None for checkbox in self.checkboxes]
+
+    def format_output(self, rendered_widgets):
+        # This will work until django 1.10.
+        # In django 1.11 format_output is removed
+        # https://docs.djangoproject.com/en/dev/releases/1.11/
+        result = ''
+        for x, y in zip(rendered_widgets, self.checkboxes):
+            result += u'<p class="placewidget">%s %s</p>' % (
+                x, y.get_content())
+        return mark_safe(result)
