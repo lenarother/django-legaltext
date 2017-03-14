@@ -56,6 +56,16 @@ To overwrite basic legaltext template which displas legaltext content place
 legaltext/content.html in your templates directory
 
 
+constants.py
+~~~~~~~~~
+
+Having legaltext slug as constant is not neccessary, however this approach is less error-prone than repeating slug as string in duifferent parts of the code.
+
+::
+
+    MOCKAPP_TERMS_SLUG = 'mockapp-terms'
+
+
 models.py
 ~~~~~~~~~
 
@@ -73,7 +83,7 @@ models.py
         date_submit = models.DateTimeField(_('Survey submited date'), default=timezone.now)
         ...
 
-        accepted_terms = LegalTextField('survay-participation-terms')
+        accepted_terms = LegalTextField(MOCKAPP_TERMS_SLUG)
 
 
 forms.py
@@ -83,30 +93,22 @@ forms.py
 
     from django.forms import ModelForm
 
-    from legaltext.fields import (LegalTextCheckboxFormField,
-                                  add_legaltext_checkboxes)
-    from legaltext.models import LegalText
+    from legaltext.widgets import CheckboxWidget
 
-    from .models import SurveyParticipant
-    
+    from .constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
+    from .models import MockSurveyParticipant
 
-    class SurveyParticipantForm(ModelForm):
+
+    class MockappParticipationForm(ModelForm):
 
         class Meta:
             model = MockSurveyParticipant
-            fields = (
-                'name', ...
-            )
+            fields = ('name', 'accepted_terms')
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # add single checkbox with known field name
-            legaltext_version = LegalText.current_version('survay-participation-terms)
-            terms_checkbox = legaltext_version.checkboxtextversion_set.first()
-            self.fields['accepted_terms'] = LegalTextCheckboxFormField(terms_checkbox)
-
-            # add all fields automatically
-            add_legaltext_checkboxes(self.fields, 'survay-participation-terms)
+            self.fields['accepted_terms'].widget = CheckboxWidget(MOCKAPP_TERMS_SLUG)
+            self.fields['accepted_terms'].required = True
 
 
 Resources
