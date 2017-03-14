@@ -1,4 +1,7 @@
-from django import forms
+try:
+    import floppyforms.__future__ as forms
+except ImportError:
+    from django import forms
 from django.utils.safestring import mark_safe
 
 from .models import LegalText
