@@ -7,13 +7,16 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+
+version = '0.0.1'
+
+
 install_requires = [
     'Django>=1.9',
     'django-markymark>=1.0.0',
     'pytz'
 ]
 
-version = '0.1'
 
 test_requires = [
     'py>=1.4.26',
@@ -38,31 +41,40 @@ test_requires = [
 setup(
     name='django-legaltext',
     version=version,
+    description=(
+        'django-legaltext helps to manage participation and privacy legal terms in forms.'),
+    keywords=['legaltext', 'django'],
     packages=find_packages(exclude=[
-        'tests',
+        'testing',
+        'testing.tests',
+        'testing.tests.legaltext',
+        'testing.tests.mockapp',
+        'testing.factories',
+        'examples',
+        'examples.mockapp',
+        'examples.mockapp.migrations'
     ]),
     include_package_data=True,
-    license='BSD License',  # example license
-    description='A simple Django app to manage legal text versions.',
-    long_description=README,
-    url='https://www.example.com/',
-    author='Ute Brecklow, Stephan Jäkel',
-    author_email='ute.brecklow@moccu.com',
+    license='Apache License (2.0)',
+    long_description='README.rst',
+    url='https://github.com/moccu/django-legaltext/',
+    author='Moccu GmbH & Co. KG',
+    author_email='info@moccu.com',
     extras_require={
         'tests': test_requires,
     },
-    tests_require=test_requires,
     install_requires=install_requires,
+    tests_require=test_requires,
     classifiers=[
         'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+        'Topic :: Software Development :: Libraries :: Python Modules',
         'Framework :: Django',
         'Framework :: Django :: 1.9',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',  # example license
-        'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
 )

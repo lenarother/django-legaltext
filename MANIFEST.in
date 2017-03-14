@@ -1,11 +1,13 @@
 include README.rst
 include CHANGELOG.rst
 include LICENSE
-include setup.cfg
 
 recursive-include legaltext/locale *
 recursive-include legaltext/templates *
 
 recursive-exclude * *.pyc
 recursive-exclude * *.pyo
+recursive-exclude * *.x.xml
 global-exclude .DS_Store
+global-exclude Makefile
+global-exclude tox.ini
