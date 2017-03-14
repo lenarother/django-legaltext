@@ -6,5 +6,5 @@ from .views import LegaltextView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^(?P<slug>.*)/$', LegaltextView.as_view(), name='legaltext'),
+    url(r'^(?P<slug>[\w-]+)/$', LegaltextView.as_view(), name='legaltext'),
 ]
