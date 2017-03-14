@@ -39,10 +39,7 @@ setup(
     name='django-legaltext',
     version=version,
     packages=find_packages(exclude=[
-        'legaltext.tests',
-        'legaltext.tests.factories',
-        'legaltext.tests.resources',
-        'legaltext.tests.tests',
+        'tests',
     ]),
     include_package_data=True,
     license='BSD License',  # example license

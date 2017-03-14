@@ -2,6 +2,7 @@
 db.sqlite3
 .coverage
 coverage.xml
+htmlcov/
 .tox/
 /junit-*.xml
 .cache/

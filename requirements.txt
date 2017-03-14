@@ -1,3 +1,0 @@
--e .
--e .[tests]
--e .[docs]
