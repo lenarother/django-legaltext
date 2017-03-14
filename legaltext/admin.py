@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils import timezone
@@ -72,20 +73,27 @@ class LegalTextAdmin(admin.ModelAdmin):
     add_new_version_link.short_description = _('Add new version')
 
 
+class LegalTextVersionAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = LegalTextVersion
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('initial', None) and kwargs.get('initial', None).get('legaltext', None):
+            legaltext_pk = kwargs.get('initial').get('legaltext')
+            previous_text = LegalTextVersion.objects.filter(
+                legaltext=legaltext_pk).first().content
+            kwargs['initial'].update({'content': previous_text})
+        super().__init__(*args, **kwargs)
+
+
 @admin.register(LegalTextVersion)
 class LegalTextVersionAdmin(admin.ModelAdmin):
     list_display = ('legaltext_name', 'valid_from')
     list_filter = ('legaltext',)
     inlines = (CheckboxTextVersionInline,)
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(LegalTextVersionAdmin, self).get_form(request, obj, **kwargs)
-        if request.method == 'GET' and obj is None:
-            previous_text = self.model.objects.filter(
-                legaltext=request.GET['legaltext']).first().content
-            form.base_fields['content'].initial = previous_text
-
-        return form
+    form = LegalTextVersionAdminForm
 
     def get_fieldsets(self, request, obj=None):
         if obj is None or obj.valid_from > timezone.now():
