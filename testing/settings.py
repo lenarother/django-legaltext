@@ -24,8 +24,7 @@ INSTALLED_APPS = (
 
     'markymark',
     'legaltext',
-    'testing',
-    'testing.resources.mockapp',
+    'examples.mockapp',
 )
 
 ROOT_URLCONF = 'django.contrib.auth.urls'

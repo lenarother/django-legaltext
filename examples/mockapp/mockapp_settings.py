@@ -24,10 +24,10 @@ INSTALLED_APPS = (
 
     'markymark',
     'legaltext',
-    'testing.resources.mockapp',
+    'examples.mockapp',
 )
 
-ROOT_URLCONF = 'testing.resources.mockapp.urls'
+ROOT_URLCONF = 'examples.mockapp.urls'
 
 SITE_ID = 1
 LANGUAGES = (('en-us', 'en-us'),)

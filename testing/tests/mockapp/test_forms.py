@@ -1,12 +1,11 @@
 import pytest
 
+from examples.mockapp.constants import MOCKAPP_PRIVACY_SLUG, MOCKAPP_TERMS_SLUG
+from examples.mockapp.forms import MockappParticipationForm
+from examples.mockapp.models import MockSurveyParticipant
 from testing.factories.legaltext import (CheckboxTextVersionFactory,
                                          LegalTextFactory,
                                          LegalTextVersionFactory)
-from testing.resources.mockapp.constants import (MOCKAPP_PRIVACY_SLUG,
-                                                 MOCKAPP_TERMS_SLUG)
-from testing.resources.mockapp.forms import MockappParticipationForm
-from testing.resources.mockapp.models import MockSurveyParticipant
 
 
 @pytest.mark.django_db
