@@ -1,12 +1,12 @@
 import pytest
 
-from legaltext.tests.factories.legaltext import (CheckboxTextVersionFactory,
-                                                 LegalTextFactory,
-                                                 LegalTextVersionFactory)
-from legaltext.tests.resources.mockapp.constants import (MOCKAPP_PRIVACY_SLUG,
-                                                         MOCKAPP_TERMS_SLUG)
-from legaltext.tests.resources.mockapp.forms import MockappParticipationForm
-from legaltext.tests.resources.mockapp.models import MockSurveyParticipant
+from testing.factories.legaltext import (CheckboxTextVersionFactory,
+                                         LegalTextFactory,
+                                         LegalTextVersionFactory)
+from testing.resources.mockapp.constants import (MOCKAPP_PRIVACY_SLUG,
+                                                 MOCKAPP_TERMS_SLUG)
+from testing.resources.mockapp.forms import MockappParticipationForm
+from testing.resources.mockapp.models import MockSurveyParticipant
 
 
 @pytest.mark.django_db

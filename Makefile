@@ -10,7 +10,7 @@ help:
 	@echo "clean-build - Clean build related files"
 
 tests:
-	py.test ${OPTS} ${APP}
+	py.test ${OPTS}
 
 coverage:
 	py.test ${OPTS} --cov=${APP} --cov-report=term-missing

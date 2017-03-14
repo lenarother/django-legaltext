@@ -3,14 +3,15 @@ import tempfile
 
 DEBUG = True
 
-SECRET_KEY = 'mockapp'
+SECRET_KEY = 'testing'
 
+TIME_ZONE = 'Europe/Berlin'
 USE_TZ = True
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'NAME': ':memory:',
     }
 }
 
@@ -20,14 +21,16 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.staticfiles',
 
     'markymark',
     'legaltext',
-    'legaltext.tests.resources.mockapp',
+    'testing',
+    'testing.resources.mockapp',
 )
 
-ROOT_URLCONF = 'legaltext.tests.resources.mockapp.urls'
+ROOT_URLCONF = 'django.contrib.auth.urls'
+
+ROOT_URLCONF = 'legaltext.urls'
 
 SITE_ID = 1
 LANGUAGES = (('en-us', 'en-us'),)
@@ -37,12 +40,6 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = tempfile.mkdtemp()
 STATIC_URL = '/static/'
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-)
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,7 +62,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.static',
             ],
         },
     },

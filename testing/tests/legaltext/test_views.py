@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 
 from legaltext.models import LegalTextVersion
 
-from legaltext.tests.factories.legaltext import LegalTextFactory
+from testing.factories.legaltext import LegalTextFactory
 
 
 @pytest.mark.django_db
