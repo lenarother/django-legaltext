@@ -25,7 +25,8 @@ class CheckboxTextVersionInline(admin.StackedInline):
 
     def get_formset(self, request, obj=None, **kwargs):
         initial = []
-        if request.method == 'GET' and obj is None:
+        if (request.method == 'GET') and (obj is None) and (
+                request.GET.get('legaltext', None) is not None):
             version = LegalText.objects.get(pk=request.GET['legaltext']).get_current_version()
             checkboxes = version.checkboxtextversion_set.all()
 
