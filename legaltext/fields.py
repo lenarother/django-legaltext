@@ -48,7 +48,7 @@ class LegalTextCheckboxFormField(forms.BooleanField):
     def to_python(self, value):
         if not value or value in self.empty_values:
             return None
-        return bool(value)
+        return self.checkbox
 
 
 class LegalTextField(models.ForeignKey):
