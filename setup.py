@@ -55,7 +55,7 @@ setup(
         'examples.mockapp.migrations'
     ]),
     include_package_data=True,
-    license='Apache License (2.0)',
+    license='BSD',
     long_description='README.rst',
     url='https://github.com/moccu/django-legaltext/',
     author='Moccu GmbH & Co. KG',
