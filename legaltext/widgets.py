@@ -23,10 +23,9 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         return self.version.pk
 
     def decompress(self, value):
-        if value:
-            return [True for checkbox in self.checkboxes]
-        else:
-            return [None for checkbox in self.checkboxes]
+        # Overwrite initial value from LegalTextField.
+        # Checkboxes are bydefault empty.
+        return [None for checkbox in self.checkboxes]
 
     def format_output(self, rendered_widgets):
         # This will work until django 1.10.

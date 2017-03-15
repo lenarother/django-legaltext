@@ -71,6 +71,12 @@ class TestParticipantForm:
         for checkbox in self.privacy_version.checkboxtextversion_set.all():
             assert checkbox.get_content() in form_html
 
+    def test_form_checkboxes_are_empty_bydefault(self):
+        form = MockappParticipationForm()
+        form_html = form.as_p()
+
+        assert 'checked="checked"' not in form_html
+
 
 @pytest.mark.django_db
 class TestParticipantFormNoLegaltextData:
