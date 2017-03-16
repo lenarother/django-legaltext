@@ -35,7 +35,7 @@ class CheckboxTextVersionInline(admin.StackedInline):
                     'content': checkbox.content,
                     'anchor': checkbox.anchor
                 })
-            self.extra = 5
+            self.extra = len(initial) or 1
         formset = super(CheckboxTextVersionInline, self).get_formset(request, obj, **kwargs)
         formset.__init__ = curry(formset.__init__, initial=initial)
 
