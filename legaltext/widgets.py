@@ -31,7 +31,6 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         # This will work until django 1.10.
         # In django 1.11 format_output is removed
         # https://docs.djangoproject.com/en/dev/releases/1.11/
-        result = ''
-        for x, y in zip(rendered_widgets, self.checkboxes):
-            result += u'<p class="placewidget">{} {}</p>'.format(x, y.get_content())
-        return mark_safe(result)
+        return mark_safe(''.join('<p class="placewidget">{0} {1}</p>'.format(
+            widget, checkbox.get_content()) for widget, checkbox in zip(
+            rendered_widgets, self.checkboxes)))
