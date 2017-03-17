@@ -1,4 +1,3 @@
-from django import forms
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils import timezone
@@ -7,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from markymark.utils import render_markdown
 
+from .forms import LegalTextVersionAdminForm
 from .models import CheckboxTextVersion, LegalText, LegalTextVersion
 
 
@@ -70,21 +70,6 @@ class LegalTextAdmin(admin.ModelAdmin):
         )
     add_new_version_link.allow_tags = True
     add_new_version_link.short_description = _('Add new version')
-
-
-class LegalTextVersionAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = LegalTextVersion
-        exclude = []
-
-    def __init__(self, *args, **kwargs):
-        legaltext_pk = kwargs.get('initial', {}).get('legaltext')
-        if legaltext_pk:
-            previous_text = LegalTextVersion.objects.filter(
-                legaltext=legaltext_pk).first().content
-            kwargs['initial'].update({'content': previous_text})
-        super().__init__(*args, **kwargs)
 
 
 @admin.register(LegalTextVersion)
