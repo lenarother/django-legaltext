@@ -8,6 +8,7 @@ from .models import LegalText
 
 
 class CheckboxWidget(forms.widgets.MultiWidget):
+    template_name = 'legaltext/checkboxwidget.html'  # Django>=1.11
 
     def __init__(self, slug, attrs=None):
         self.checkboxes = LegalText.current_version(slug).checkboxtextversion_set.all()
@@ -28,9 +29,18 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         return [None for checkbox in self.checkboxes]
 
     def format_output(self, rendered_widgets):
-        # This will work until django 1.10.
+        # This works for django <= 1.10.
         # In django 1.11 format_output is removed
         # https://docs.djangoproject.com/en/dev/releases/1.11/
         return mark_safe(''.join('<p class="placewidget">{0} {1}</p>'.format(
             widget, checkbox.get_content()) for widget, checkbox in zip(
             rendered_widgets, self.checkboxes)))
+
+    def get_context(self, name, value, attrs=None):
+        # This works for django >= 1.11.
+        # It works together with template_name.
+        context = super().get_context(name, value, attrs)
+        widgets = context['widget']['subwidgets']
+        labels = [checkbox.get_content() for checkbox in self.checkboxes]
+        context['widget']['subwidgets_checkboxes'] = zip(widgets, labels)
+        return context
