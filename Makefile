@@ -1,5 +1,4 @@
-.PHONY: tests coverage coverage-html
-APP=legaltext/
+.PHONY: tests coverage coverage-html devinstall clean-build
 OPTS=
 
 help:
@@ -13,10 +12,10 @@ tests:
 	py.test ${OPTS}
 
 coverage:
-	py.test ${OPTS} --cov=${APP} --cov-report=term-missing
+	py.test ${OPTS} --cov
 
 coverage-html:
-	py.test ${OPTS} --cov=${APP} --cov-report=term-missing --cov-report=html
+	py.test ${OPTS} --cov --cov-report=html
 
 devinstall:
 	pip install -e .
