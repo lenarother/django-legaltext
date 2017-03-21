@@ -27,12 +27,9 @@ INSTALLED_APPS = (
     'examples.mockapp',
 )
 
-ROOT_URLCONF = 'django.contrib.auth.urls'
-
-ROOT_URLCONF = 'legaltext.urls'
+ROOT_URLCONF = 'testing.urls'
 
 SITE_ID = 1
-LANGUAGES = (('en-us', 'en-us'),)
 
 MEDIA_ROOT = tempfile.mkdtemp()
 MEDIA_URL = '/media/'
