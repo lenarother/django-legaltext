@@ -17,28 +17,30 @@ class CheckboxTextVersionInline(admin.StackedInline):
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.valid_from <= timezone.now():
-            return (
-                'content',
-                'anchor'
-            )
-        else:
-            return ()
+            return ('content', 'anchor')
+        return ()
+
+    def get_extra(self, *args, **kwargs):
+        if 'initial' in kwargs:
+            return len(kwargs['initial']) + 1
+        return super(CheckboxTextVersionInline, self).get_extra(*args, **kwargs)
 
     def get_formset(self, request, obj=None, **kwargs):
         initial = []
         if obj is None and request.method == 'GET' and 'legaltext' in request.GET:
-            version = LegalText.objects.get(pk=request.GET['legaltext']).get_current_version()
-            checkboxes = version.checkboxtextversion_set.all()
+            legaltext = LegalText.objects.filter(pk=request.GET['legaltext']).first()
+            if legaltext:
+                version = legaltext.get_current_version()
+                checkboxes = version.checkboxtextversion_set.all()
 
-            for checkbox in checkboxes:
-                initial.append({
-                    'content': checkbox.content,
-                    'anchor': checkbox.anchor
-                })
-            self.extra = len(initial) or 1
+                for checkbox in checkboxes:
+                    initial.append({
+                        'content': checkbox.content,
+                        'anchor': checkbox.anchor
+                    })
+
         formset = super(CheckboxTextVersionInline, self).get_formset(request, obj, **kwargs)
         formset.__init__ = curry(formset.__init__, initial=initial)
-
         return formset
 
 
@@ -81,23 +83,18 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
 
     def get_fieldsets(self, request, obj=None):
         if obj is None or obj.valid_from > timezone.now():
-            return super().get_fieldsets(request, obj)
-        else:
-            return ((None, {'fields': (
-                'legaltext',
-                'valid_from',
-                'rendered_content')}),
-            )
+            return super(LegalTextVersionAdmin, self).get_fieldsets(request, obj)
+
+        return ((None, {'fields': (
+            'legaltext',
+            'valid_from',
+            'rendered_content')}),
+        )
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.valid_from <= timezone.now():
-            return (
-                'legaltext',
-                'valid_from',
-                'rendered_content',
-            )
-        else:
-            return ()
+            return ('legaltext', 'valid_from', 'rendered_content')
+        return ()
 
     def legaltext_name(self, obj):
         return obj.legaltext.name

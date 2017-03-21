@@ -29,12 +29,3 @@ class LegalTextField(models.ForeignKey):
         name, path, args, kwargs = super(LegalTextField, self).deconstruct()
         kwargs['slug'] = self.slug
         return name, path, args, kwargs
-
-    def to_python(self, value):
-        if not value or value in self.empty_values:
-            return None
-        try:
-            LegalTextVersion.objects.get(pk=value)
-        except LegalTextVersion.DoesNotExist:
-            return None
-        return value

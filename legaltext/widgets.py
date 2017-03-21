@@ -11,8 +11,8 @@ class CheckboxWidget(forms.widgets.MultiWidget):
     template_name = 'legaltext/checkboxwidget.html'  # Django>=1.11
 
     def __init__(self, slug, attrs=None):
-        self.checkboxes = LegalText.current_version(slug).checkboxtextversion_set.all()
         self.version = LegalText.current_version(slug)
+        self.checkboxes = self.version.checkboxtextversion_set.all()
         widgets = [forms.CheckboxInput() for checkbox in self.checkboxes]
         super(CheckboxWidget, self).__init__(widgets, attrs)
 
@@ -25,16 +25,17 @@ class CheckboxWidget(forms.widgets.MultiWidget):
 
     def decompress(self, value):
         # Overwrite initial value from LegalTextField.
-        # Checkboxes are bydefault empty.
+        # Checkboxes are by default empty.
         return [None for checkbox in self.checkboxes]
 
     def format_output(self, rendered_widgets):
         # This works for django <= 1.10.
         # In django 1.11 format_output is removed
         # https://docs.djangoproject.com/en/dev/releases/1.11/
-        return mark_safe(''.join('<p class="placewidget">{0} {1}</p>'.format(
-            widget, checkbox.get_content()) for widget, checkbox in zip(
-            rendered_widgets, self.checkboxes)))
+        return mark_safe(''.join(
+            '{0}<label>{1}</label>'.format(widget, checkbox.get_content())
+            for widget, checkbox in zip(rendered_widgets, self.checkboxes)
+        ))
 
     def get_context(self, name, value, attrs=None):
         # This works for django >= 1.11.

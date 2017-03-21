@@ -27,7 +27,8 @@ class LegalText(models.Model):
         return obj.get_current_version()
 
     def get_current_version(self):
-        version = self.legaltextversion_set.filter(valid_from__lte=timezone.now()).first()
+        version = self.legaltextversion_set.filter(
+            valid_from__lte=timezone.now()).first()
         if version:
             return version
         return LegalTextVersion.objects.get_or_create(legaltext=self)[0]
