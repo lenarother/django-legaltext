@@ -39,7 +39,7 @@ class CheckboxWidget(forms.widgets.MultiWidget):
     def get_context(self, name, value, attrs=None):
         # This works for django >= 1.11.
         # It works together with template_name.
-        context = super().get_context(name, value, attrs)
+        context = super(CheckboxWidget, self).get_context(name, value, attrs)
         widgets = context['widget']['subwidgets']
         labels = [checkbox.get_content() for checkbox in self.checkboxes]
         context['widget']['subwidgets_checkboxes'] = zip(widgets, labels)

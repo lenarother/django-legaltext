@@ -13,7 +13,7 @@ class MockappParticipationForm(ModelForm):
         fields = ('name', 'accepted_privacy', 'accepted_terms')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(MockappParticipationForm, self).__init__(*args, **kwargs)
         self.fields['accepted_privacy'].widget = CheckboxWidget(MOCKAPP_PRIVACY_SLUG)
         self.fields['accepted_privacy'].required = True
         self.fields['accepted_terms'].widget = CheckboxWidget(MOCKAPP_TERMS_SLUG)

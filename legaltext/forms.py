@@ -17,4 +17,4 @@ class LegalTextVersionAdminForm(forms.ModelForm):
             previous_text = LegalTextVersion.objects.filter(
                 legaltext=legaltext_pk).first().content
             kwargs['initial'].update({'content': previous_text})
-        super().__init__(*args, **kwargs)
+        super(LegalTextVersionAdminForm, self).__init__(*args, **kwargs)

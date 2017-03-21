@@ -1,8 +1,7 @@
 import pytest
 from django.core.urlresolvers import reverse
 
-from testing.factories.legaltext import (LegalTextFactory,
-                                         LegalTextVersionFactory)
+from testing.factories import LegalTextFactory, LegalTextVersionFactory
 
 
 @pytest.mark.django_db

@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from legaltext.models import LegalText, LegalTextVersion
 
-from testing.factories.legaltext import (
+from testing.factories import (
     CheckboxTextVersionFactory, LegalTextFactory, LegalTextVersionFactory)
 
 

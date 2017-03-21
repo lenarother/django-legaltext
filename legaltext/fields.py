@@ -23,10 +23,10 @@ class LegalTextField(models.ForeignKey):
         kwargs['related_name'] = '+'
         kwargs['blank'] = True
         kwargs['null'] = True
-        super().__init__(to, **kwargs)
+        super(LegalTextField, self).__init__(to, **kwargs)
 
     def deconstruct(self):
-        name, path, args, kwargs = super().deconstruct()
+        name, path, args, kwargs = super(LegalTextField, self).deconstruct()
         kwargs['slug'] = self.slug
         return name, path, args, kwargs
 
