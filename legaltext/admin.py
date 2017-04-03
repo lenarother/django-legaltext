@@ -6,11 +6,22 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from markymark.utils import render_markdown
 
-from .forms import LegalTextVersionAdminForm
+from .forms import (CustomInlineFormset, CustomModelForm,
+                    LegalTextVersionAdminForm)
 from .models import CheckboxTextVersion, LegalText, LegalTextVersion
 
 
-class CheckboxTextVersionInline(admin.StackedInline):
+class CustomInlineAdmin(admin.StackedInline):
+    """
+    Custom inline admin that support initial data
+    Implementation based on:
+    http://www.catharinegeek.com/how-to-set-initial-data-for-inline-model-formset-in-django/
+    """
+    form = CustomModelForm
+    formset = CustomInlineFormset
+
+
+class CheckboxTextVersionInline(CustomInlineAdmin):
     model = CheckboxTextVersion
     extra = 0
     can_delete = False
