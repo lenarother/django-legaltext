@@ -1,14 +1,18 @@
 try:
-    import floppyforms.__future__ as forms
-except ImportError:
+    import django
+    django_version = django.__version__.split('.')
+    assert int(django_version[0]) > 1 or int(django_version[1]) > 10
     from django import forms
-from django.utils.safestring import mark_safe
+except AssertionError:
+    import floppyforms.__future__ as forms
+
+from django.template import loader
 
 from .models import LegalText
 
 
 class CheckboxWidget(forms.widgets.MultiWidget):
-    template_name = 'legaltext/checkboxwidget.html'  # Django>=1.11
+    template_name = 'legaltext/checkboxwidget_django11.html'  # Django>=1.11
 
     def __init__(self, slug, attrs=None):
         self.version = LegalText.current_version(slug)
@@ -28,15 +32,6 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         # Checkboxes are by default empty.
         return [None for checkbox in self.checkboxes]
 
-    def format_output(self, rendered_widgets):
-        # This works for django <= 1.10.
-        # In django 1.11 format_output is removed
-        # https://docs.djangoproject.com/en/dev/releases/1.11/
-        return mark_safe(''.join(
-            '{0}<label>{1}</label>'.format(widget, checkbox.get_content())
-            for widget, checkbox in zip(rendered_widgets, self.checkboxes)
-        ))
-
     def get_context(self, name, value, attrs=None):
         # This works for django >= 1.11.
         # It works together with template_name.
@@ -45,3 +40,16 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         labels = [checkbox.get_content() for checkbox in self.checkboxes]
         context['widget']['subwidgets_checkboxes'] = zip(widgets, labels)
         return context
+
+    def format_output(self, rendered_widgets):
+        # This works for django < 1.11.
+        return loader.render_to_string('legaltext/checkboxwidget_django19.html', {
+            'widgets': [
+                (widget, '{0}_{1}'.format(
+                    self.context_instance['field'].name, i), checkbox.get_content())
+                for i, widget, checkbox
+                in zip(range(0, len(self.checkboxes)), rendered_widgets, self.checkboxes)
+            ],
+            'required': self.is_required,
+            'errors': self.context_instance['field'].errors
+        })

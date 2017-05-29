@@ -1,0 +1,13 @@
+{% for widget, name, label in widgets %}
+	<div class="form-row">
+		<label
+			class="form-field-checkboxinput has-name-{{ name }} {{ required|yesno:' is-required,' }}{% if errors %} has-errors{% endif %}"
+			for="id_{{ name }}">
+			{{ widget }}
+
+			<span class="label">
+				{{ label|safe }}
+			</span>
+		</label>
+	</div>
+{% endfor %}

@@ -1,0 +1,13 @@
+{% for widget, checkbox_label in widget.subwidgets_checkboxes %}
+	<div class="form-row">
+		<label 
+			class="form-field-checkboxinput has-name-{{ widget.name }}"
+			for="{{ widget.attrs.id }} >
+			<input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} />
+			
+			<span class="label">
+				{{ checkbox_label|safe }}
+			</span>
+		</label>
+	</div>
+{% endfor %}
