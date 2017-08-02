@@ -22,10 +22,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
-    'floppyforms',
     'markymark',
     'legaltext',
-
     'examples.mockapp',
 )
 

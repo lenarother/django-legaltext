@@ -1,0 +1,3 @@
+{% for widget, checkbox_label in widget.subwidgets_checkboxes %}
+	<input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} /><label for="{{ widget.name }}">{{ checkbox_label }}</label>
+{% endfor %}

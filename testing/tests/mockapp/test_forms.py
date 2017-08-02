@@ -33,10 +33,6 @@ class TestParticipantForm:
             'accepted_privacy_2': True,
         }
 
-        self.checkbox_count = (
-            self.terms_version.checkboxtextversion_set.count() +
-            self.privacy_version.checkboxtextversion_set.count())
-
     def test_form_valid(self):
         form = MockappParticipationForm(self.form_data)
 
@@ -79,12 +75,6 @@ class TestParticipantForm:
         form_html = form.as_p()
 
         assert 'checked="checked"' not in form_html
-
-    def test_each_checkbox_displayed_with_form_row(self):
-        form = MockappParticipationForm()
-        form_html = form.as_p()
-
-        assert form_html.count('<div class="form-row">') == self.checkbox_count
 
 
 @pytest.mark.django_db
