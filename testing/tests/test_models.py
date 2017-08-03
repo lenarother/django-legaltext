@@ -90,7 +90,7 @@ class TestLegalTextVersion:
 
     def test_render_content(self):
         legal_text_version = LegalTextVersionFactory.create(content='Text Text Text')
-        assert legal_text_version.render_content() == 'Text Text Text'
+        assert legal_text_version.render_content() == '<p>Text Text Text</p>'
 
     @pytest.mark.xfail
     def test_render_content_with_anchor(self):
