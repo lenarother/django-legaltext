@@ -1,16 +1,17 @@
+import os
 import tempfile
 
 
 DEBUG = True
 
-SECRET_KEY = 'mockapp'
+SECRET_KEY = 'legaltextexamples'
 
 USE_TZ = True
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite3'),
     }
 }
 
@@ -22,12 +23,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
+    'floppyforms',
     'markymark',
     'legaltext',
-    'examples.mockapp',
+    'examples.static_legaltexts',
+    'examples.dynamic_legaltexts',
 )
 
-ROOT_URLCONF = 'examples.mockapp.urls'
+ROOT_URLCONF = 'examples.urls'
 
 SITE_ID = 1
 LANGUAGES = (('en-us', 'en-us'),)
@@ -41,7 +44,6 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 MIDDLEWARE_CLASSES = [

@@ -1,0 +1,13 @@
+{% load floppyforms %}
+
+
+<html>
+	<head><title>Test</title></head>
+	<body>
+		<form action="{{ request.build_absolute_uri }}" method="post" novalidate>
+		    {% csrf_token %}
+		    {% form form using "floppyforms/layouts/p.html" %}
+		    <input type="submit" value="Submit" />
+		</form>
+	</body>
+</html>

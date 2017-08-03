@@ -1,25 +1,32 @@
-try:
-    import floppyforms.__future__ as forms
-except ImportError:
-    from django import forms
-from django.utils.safestring import mark_safe
+import floppyforms.__future__ as forms
+from django.conf import settings
+from django.template.loader import render_to_string
 
 from .models import LegalText
 
 
-class CheckboxWidget(forms.widgets.MultiWidget):
-    template_name = 'legaltext/checkboxwidget.html'  # Django>=1.11
+class LegalTextWidget(forms.widgets.MultiWidget):
+    template_name = None
 
     def __init__(self, slug, attrs=None):
         self.version = LegalText.current_version(slug)
-        self.checkboxes = self.version.checkboxtextversion_set.all()
-        widgets = [forms.CheckboxInput() for checkbox in self.checkboxes]
-        super(CheckboxWidget, self).__init__(widgets, attrs)
+        self.checkboxes = self.version.checkboxes.all()
+
+        super(LegalTextWidget, self).__init__(
+            [forms.CheckboxInput() for checkbox in self.checkboxes], attrs)
+
+    def get_template_name(self):
+        if self.template_name:
+            return self.template_name
+
+        template_name = getattr(
+            settings, 'LEGALTEXT_WIDGET_TEMPLATE', 'legaltext/widget.html')
+        overrides = getattr(settings, 'LEGALTEXT_WIDGET_TEMPLATE_OVERRIDES', {})
+        return overrides.get(self.version.legaltext.slug, template_name)
 
     def value_from_datadict(self, data, files, name):
-        for checkbox_counter in range(len(self.checkboxes)):
-            chackbox_name = '{}_{}'.format(name, checkbox_counter)
-            if data.get(chackbox_name, None) is None:
+        for i, checkbox in enumerate(self.checkboxes):
+            if not data.get('{}_{}'.format(name, i)):
                 return None
         return self.version.pk
 
@@ -29,19 +36,18 @@ class CheckboxWidget(forms.widgets.MultiWidget):
         return [None for checkbox in self.checkboxes]
 
     def format_output(self, rendered_widgets):
-        # This works for django <= 1.10.
-        # In django 1.11 format_output is removed
-        # https://docs.djangoproject.com/en/dev/releases/1.11/
-        return mark_safe(''.join(
-            '{0}<label>{1}</label>'.format(widget, checkbox.get_content())
-            for widget, checkbox in zip(rendered_widgets, self.checkboxes)
-        ))
-
-    def get_context(self, name, value, attrs=None):
-        # This works for django >= 1.11.
-        # It works together with template_name.
-        context = super(CheckboxWidget, self).get_context(name, value, attrs)
-        widgets = context['widget']['subwidgets']
-        labels = [checkbox.get_content() for checkbox in self.checkboxes]
-        context['widget']['subwidgets_checkboxes'] = zip(widgets, labels)
-        return context
+        base_name = self.context_instance['field'].name
+        return render_to_string(self.get_template_name(), {
+            'required': self.is_required,
+            'errors': self.context_instance['field'].errors,
+            'version': self.version,
+            'checkboxes': [(
+                '{0}_{1}'.format(base_name, i),
+                widget,
+                checkbox.render_content()
+            ) for i, widget, checkbox in zip(
+                range(len(rendered_widgets)),
+                rendered_widgets,
+                self.checkboxes
+            )]
+        })

@@ -13,6 +13,6 @@ class LegaltextView(DetailView):
         legaltext_version = self.object.get_current_version()
         context.update({
             'current_version': legaltext_version,
-            'current_version_content': legaltext_version.get_content()
+            'current_version_content': legaltext_version.render_content()
         })
         return context

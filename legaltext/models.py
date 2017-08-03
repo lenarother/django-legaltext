@@ -1,10 +1,7 @@
-import re
-
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import ugettext
 from markymark.fields import MarkdownField
 
 
@@ -35,11 +32,10 @@ class LegalText(models.Model):
 
 
 class LegalTextVersion(models.Model):
-    legaltext = models.ForeignKey(LegalText, verbose_name=_('Legal text'),)
+    legaltext = models.ForeignKey(LegalText, verbose_name=_('Legal text'))
     valid_from = models.DateTimeField(_('Valid from'), default=timezone.now)
 
-    content = MarkdownField(_('Text'), help_text=_(
-        'Optional: use [[checkbox-anchor-name]] text ... [[end]] to insert checkbox anchor'))
+    content = MarkdownField(_('Text'))
 
     class Meta:
         verbose_name = _('Legal text version')
@@ -50,69 +46,32 @@ class LegalTextVersion(models.Model):
         return '{0} ({1:%x %X})'.format(
             self.legaltext.name, timezone.localtime(self.valid_from))
 
-    def get_content(self):
-        """
-        Changes [[anchor]] and [[end]] keywords into div
+    @property
+    def name(self):
+        return self.legaltext.name
 
-        Returns:
-            legaltext text including formatting as string
-
-        """
-        legaltext_content = re.sub(
-            '\[\[end\]\]',
-            '</div>',
-            self.content
-        )
-
-        legaltext_content = re.sub(
-            '\[\[(.*)\]\]',
-            '<div class="\g<1>"><span class="anchor" id="\g<1>"></span>',
-            legaltext_content
-        )
-
-        return legaltext_content
+    def render_content(self):
+        # TODO: Insert anchors
+        return self.content
 
 
-class CheckboxTextVersion(models.Model):
+class LegalTextCheckbox(models.Model):
     legaltext_version = models.ForeignKey(
-        LegalTextVersion, verbose_name=_('Legal text version'),)
+        LegalTextVersion, verbose_name=_('Legal text version'), related_name='checkboxes')
 
-    content = MarkdownField(_('Text'), help_text=_(
-        'Use [[word]] to indicate the word used as a link to the legaltext content.'))
-    anchor = models.CharField(_('Anchor'), max_length=64, blank=True)
+    content = MarkdownField(_('Text'))
 
     class Meta:
-        verbose_name = _('Checkbox')
-        verbose_name_plural = _('Checkboxes')
+        verbose_name = _('Legal text checkbox')
+        verbose_name_plural = _('Legal text Checkboxes')
         ordering = ('legaltext_version',)
 
     def __str__(self):
-        name = 'Checkbox'
-        if self.anchor:
-            name += ' (with {0} anchor)'.format(self.anchor)
-        return '{0} for {1} ({2:%x %X})'.format(
-            name, self.legaltext_version.legaltext.name,
-            timezone.localtime(self.legaltext_version.valid_from))
-
-    @property
-    def slug(self):
-        return self.legaltext_version.legaltext.slug
-
-    def get_content(self, privacy=False):
-        """
-        Includes url to legaltext in checkbox content text
-        Uses word in squer brackets e.g. [[privacy terms]]
-
-        Returns:
-            checkbox lablel as string contailing url
-
-        """
-        legaltext_url = reverse('legaltext', kwargs={'slug': self.slug})
-        if self.anchor:
-            legaltext_url += '#{0}'.format(self.anchor)
-
-        return re.sub(
-            '\[\[(.*)\]\]',
-            '<a href="{0}" title="\g<1>">\g<1></a>'.format(legaltext_url),
-            self.content
+        return ugettext('Checkbox for {0} ({1:%x %X})').format(
+            self.legaltext_version.name,
+            timezone.localtime(self.legaltext_version.valid_from)
         )
+
+    def render_content(self):
+        # TODO: Insert links
+        return self.content

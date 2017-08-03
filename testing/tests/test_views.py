@@ -2,7 +2,6 @@ import pytest
 from django.core.urlresolvers import reverse
 
 from legaltext.models import LegalTextVersion
-
 from testing.factories import LegalTextFactory
 
 
