@@ -40,7 +40,7 @@ class LegalTextFormField(forms.BooleanField):
         self.slug = slug
         kwargs.setdefault('widget', LegalTextWidget(self.slug))
         kwargs.setdefault('required', True)
-        super().__init__(*args, **kwargs)
+        super(LegalTextFormField, self).__init__(*args, **kwargs)
 
     label = property(lambda s: LegalText.current_version(s.slug).name, lambda s, v: None)
 

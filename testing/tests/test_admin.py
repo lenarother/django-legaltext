@@ -127,7 +127,7 @@ class TestLegalTextVersionAdmin:
         request.user = admin_user
         response = self.modeladmin.add_view(request)
         assert response.status_code == 200
-        assert response.context_data['adminform'].form.initial == {}
+        assert response.context_data['adminform'].form.initial == {'legaltext': '1'}
 
     def test_add_form_initial(self, rf, admin_user):
         legal_text_version = LegalTextVersionFactory.create(content='foobar')
@@ -135,4 +135,5 @@ class TestLegalTextVersionAdmin:
         request.user = admin_user
         response = self.modeladmin.add_view(request)
         assert response.status_code == 200
-        assert response.context_data['adminform'].form.initial == {'content': 'foobar'}
+        assert response.context_data['adminform'].form.initial == {
+            'content': 'foobar', 'legaltext': '1'}

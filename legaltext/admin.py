@@ -16,7 +16,7 @@ class LegalTextVersionAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        legaltext_id = (kwargs.get('initial') or {}).pop('legaltext', None)
+        legaltext_id = (kwargs.get('initial') or {}).get('legaltext', None)
         if legaltext_id:
             current_version = LegalTextVersion.objects.filter(
                 legaltext=legaltext_id).first()
