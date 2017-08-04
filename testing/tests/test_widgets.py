@@ -59,7 +59,8 @@ class TestLegalTextWidget:
         assert widget.decompress(1) == [None, None]
 
     @mock.patch('legaltext.widgets.render_to_string')
-    def test_format_output(self, render_mock):
+    def test_render(self, render_mock):
+        render_mock.return_value = 'rendered widget'
         widget = LegalTextWidget(self.legal_text_version.legaltext.slug)
         field = mock.Mock()
         field.name = 'field'
