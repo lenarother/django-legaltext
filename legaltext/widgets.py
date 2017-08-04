@@ -1,6 +1,7 @@
 import floppyforms.__future__ as forms
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils.text import mark_safe
 
 from .models import LegalText
 
@@ -10,7 +11,7 @@ class LegalTextWidget(forms.widgets.MultiWidget):
 
     def __init__(self, slug, attrs=None):
         self.version = LegalText.current_version(slug)
-        self.checkboxes = self.version.checkboxes.all()
+        self.checkboxes = list(self.version.checkboxes.all())
 
         super(LegalTextWidget, self).__init__(
             [forms.CheckboxInput() for checkbox in self.checkboxes], attrs)
@@ -35,19 +36,36 @@ class LegalTextWidget(forms.widgets.MultiWidget):
         # Checkboxes are by default empty.
         return [None for checkbox in self.checkboxes]
 
-    def format_output(self, rendered_widgets):
-        base_name = self.context_instance['field'].name
-        return render_to_string(self.get_template_name(), {
+    def render(self, name, value, attrs=None):
+        if self.is_localized:
+            for widget in self.widgets:
+                widget.is_localized = self.is_localized
+
+        if not isinstance(value, list):
+            value = self.decompress(value)
+
+        final_attrs = self.build_attrs(attrs or {})
+        id_ = final_attrs.get('id')
+
+        checkboxes = []
+        for i, widget in enumerate(self.widgets):
+            try:
+                widget_value = value[i]
+            except IndexError:
+                widget_value = None
+
+            if id_:
+                final_attrs = dict(final_attrs, id='%s_%s' % (id_, i))
+
+            checkboxes.append((
+                '{0}_{1}'.format(name, i),
+                widget.render(name + '_%s' % i, widget_value, final_attrs),
+                self.checkboxes[i].render_content()
+            ))
+
+        return mark_safe(render_to_string(self.get_template_name(), {
             'required': self.is_required,
             'errors': self.context_instance['field'].errors,
             'version': self.version,
-            'checkboxes': [(
-                '{0}_{1}'.format(base_name, i),
-                widget,
-                checkbox.render_content()
-            ) for i, widget, checkbox in zip(
-                range(len(rendered_widgets)),
-                rendered_widgets,
-                self.checkboxes
-            )]
-        })
+            'checkboxes': checkboxes
+        }))

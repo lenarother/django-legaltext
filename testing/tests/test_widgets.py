@@ -20,7 +20,7 @@ class TestLegalTextWidget:
     def test_init(self):
         widget = LegalTextWidget(self.legal_text_version.legaltext.slug)
         assert isinstance(widget.version, LegalTextVersion)
-        assert widget.checkboxes.count() == 2
+        assert len(widget.checkboxes) == 2
 
         assert len(widget.widgets) == 2
         assert isinstance(widget.widgets[0], forms.CheckboxInput)
