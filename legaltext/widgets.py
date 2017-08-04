@@ -45,6 +45,7 @@ class LegalTextWidget(forms.widgets.MultiWidget):
             value = self.decompress(value)
 
         final_attrs = self.build_attrs(attrs or {})
+        final_attrs.update(getattr(settings, 'LEGALTEXT_WIDGET_ATTRS', {}))
         id_ = final_attrs.get('id')
 
         checkboxes = []
@@ -65,7 +66,8 @@ class LegalTextWidget(forms.widgets.MultiWidget):
 
         return mark_safe(render_to_string(self.get_template_name(), {
             'required': self.is_required,
-            'errors': self.context_instance['field'].errors,
+            'errors': getattr(getattr(
+                self, 'context_instance', {}).get('field'), 'errors', []),
             'version': self.version,
             'checkboxes': checkboxes
         }))

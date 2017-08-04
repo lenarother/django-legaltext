@@ -64,7 +64,7 @@ class TestLegalTextWidget:
         widget = LegalTextWidget(self.legal_text_version.legaltext.slug)
         field = mock.Mock()
         field.name = 'field'
-        field.errors = []
+        field.errors = [1]
         widget.context_instance = {'field': field}
         widget.render('field', None)
         assert render_mock.called is True
@@ -75,5 +75,13 @@ class TestLegalTextWidget:
                 ('field_0', '<input type="checkbox" name="field_0">\n', 'cb1'),
                 ('field_1', '<input type="checkbox" name="field_1">\n', 'cb2')],
             'required': False,
-            'errors': []
+            'errors': [1]
         }
+
+    @mock.patch('legaltext.widgets.render_to_string')
+    def test_render_extra_attrs(self, render_mock, settings):
+        settings.LEGALTEXT_WIDGET_ATTRS = {'class': 'field'}
+        render_mock.return_value = 'rendered widget'
+        widget = LegalTextWidget(self.legal_text_version.legaltext.slug)
+        widget.render('field', None)
+        assert 'class="field"' in render_mock.call_args[0][1]['checkboxes'][0][1]

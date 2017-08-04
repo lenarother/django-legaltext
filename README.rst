@@ -111,6 +111,8 @@ There are some more settings you can set to change the applcation
   Change the template which is used to in the widget to output the checkboxes
 * `LEGALTEXT_WIDGET_TEMPLATE_OVERRIDES`
   Choose a different template to use in widget for specific slugs
+* `LEGALTEXT_WIDGET_ATTRS`
+  Add extra attributes to checkbox input elements
 
 
 Resources
