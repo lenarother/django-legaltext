@@ -1,27 +1,22 @@
 sudo: false
 language: python
-
 python:
-  - '3.5'
-  - '3.4'
-  - '2.7'
-
+- '3.5'
+- '3.4'
+- '2.7'
 env:
-  - DJANGO_VERSION=1.11.x
-  - DJANGO_VERSION=1.10.x
-  - DJANGO_VERSION=1.9.x
-
+- DJANGO_VERSION=1.11.x
+- DJANGO_VERSION=1.10.x
+- DJANGO_VERSION=1.9.x
 install:
-  - pip install tox
-
+- pip install tox
 script:
-  - tox -e "$TRAVIS_PYTHON_VERSION-$DJANGO_VERSION"
-
+- tox -e "$TRAVIS_PYTHON_VERSION-$DJANGO_VERSION"
 after_success:
-  - pip install coveralls coverage
-  - coverage report
-  - coveralls
-
+- pip install coveralls coverage
+- coverage report
+- coveralls
 notifications:
   slack:
-    secure:
+    rooms:
+      secure: oeqkemta3nG9/e7Tyw9w/Qr0oHdfvgBWn/JLTx6QwI5t04u6vM5BVr9hfCskxk2l8nlmG7rLf1HeW8BUte7iZdYwh/EHBOVytMyLTfldHVAh7xwV5lWQFVF2Mk/sOZmAmZO89kj4sIlv6gcW/shnpZvGvR/6Whp/aokUGmt2S6fHBqWwSbDg9IJByHjKwZFz055H9VGXWcPb90vgHtqOke2rhDEApE25kznYIdyMqHM4VO1AHReszqZet3z35+tfCV/9aTvRpYK/emMGo1byLvqIxZwLzTz2q7U7RrB79f38bKHGep4oyuKHsdFJIoha0lxIfNzRS5/1gvbExYpWJbSxItZBURBMmg6L0lCAxgYDkjZsFCk7/P5g8TUIopP//yc6yAXxgvDK5lDE/FUP3Lh4GMkRQ8DISPLSOYYVXYEGz5k6AqKMko1vtJnLsnjuVhgAAcgyhUaG4CMmHlVSbPbE9a6cbqm5opY0XqEaqTp88grJzcuaVePhkBotB2Qa9AKPUNg9+TNwKQMl4Ynvb0RQ74wio29icPQq+VRvAwcDnpRhUMzPtKuBclQ3xZKesOvvQHBLspQ4Nr55v8w5NX6zhAk4x/5aFjPpQvQ4Vx9yzSERYrOW2Q3tFfYNzL5Q3za4MGfWcRZBREH1zku/pVYeTCOi+AIVoeK3LLOyY40=
