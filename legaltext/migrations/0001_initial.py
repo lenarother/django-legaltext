@@ -30,23 +30,11 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='LegalTextCheckbox',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', markymark.fields.MarkdownField(verbose_name='Text')),
-            ],
-            options={
-                'verbose_name_plural': 'Legal text Checkboxes',
-                'ordering': ('legaltext_version',),
-                'verbose_name': 'Legal text checkbox',
-            },
-        ),
-        migrations.CreateModel(
             name='LegalTextVersion',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('valid_from', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Valid from')),
-                ('content', markymark.fields.MarkdownField(verbose_name='Text')),
+                ('content', markymark.fields.MarkdownField(help_text='You can use [block:foo]Your text[/block] to create a block with an anchor. Anchors ([anchor:foo]) can be used in checkbox texts to link to specific parts of the legal text.', verbose_name='Text')),
                 ('legaltext', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='legaltext.LegalText', verbose_name='Legal text')),
             ],
             options={
@@ -54,10 +42,5 @@ class Migration(migrations.Migration):
                 'ordering': ('legaltext__slug', '-valid_from'),
                 'verbose_name': 'Legal text version',
             },
-        ),
-        migrations.AddField(
-            model_name='legaltextcheckbox',
-            name='legaltext_version',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='checkboxes', to='legaltext.LegalTextVersion', verbose_name='Legal text version'),
         ),
     ]
