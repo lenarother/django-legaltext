@@ -2,11 +2,11 @@
 django-legaltext
 ================
 
-.. image:: https://badge.fury.io/py/django-legaltext.png
-    :target: http://badge.fury.io/py/django-legaltext
+.. image:: https://badge.fury.io/py/django-cacheback.svg
+    :target: https://badge.fury.io/py/django-cachebackt
     :alt: Latest PyPI version
 
-.. image:: https://travis-ci.org/moccu/django-legaltext.png?branch=master
+.. image:: https://travis-ci.org/moccu/django-legaltext.svg?branch=master
     :target: https://travis-ci.org/moccu/django-legaltext
     :alt: Latest Travis CI build status
 
