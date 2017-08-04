@@ -96,9 +96,9 @@ class LegalTextCheckbox(models.Model):
         ordering = ('legaltext_version',)
 
     def __str__(self):
-        return ugettext('Checkbox for {0} ({1:%x %X})').format(
+        return ugettext('Checkbox for {0} ({1})').format(
             self.legaltext_version.name,
-            timezone.localtime(self.legaltext_version.valid_from)
+            '{0:%x %X}'.format(timezone.localtime(self.legaltext_version.valid_from))
         )
 
     def render_content(self):
