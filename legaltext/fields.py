@@ -21,7 +21,7 @@ class LegalTextField(models.ForeignKey):
     def __init__(self, slug=None, to=LegalTextVersion, **kwargs):
         self.slug = slug
         if slug:
-            kwargs['default'] = CurrentLegalText(slug)
+            kwargs.setdefault('default', CurrentLegalText(slug))
             kwargs['limit_choices_to'] = {'legaltext__slug': slug}
         kwargs['related_name'] = '+'
         kwargs['blank'] = True
