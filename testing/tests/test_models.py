@@ -22,6 +22,7 @@ class TestLegalText:
         assert version.legaltext.slug == 'test-version'
         assert version.legaltext.name == 'test-version'
         assert version.content == ''
+        assert version.checkboxes.count() == 1
 
     @freeze_time('2016-01-02')
     def test_current_version(self):
@@ -50,6 +51,7 @@ class TestLegalText:
         assert version.legaltext.slug == 'foo-bar-text'
         assert version.legaltext.name == 'Foo Bar Text'
         assert version.content == ''
+        assert version.checkboxes.count() == 1
 
     @freeze_time('2016-01-02')
     def test_get_current_version(self):

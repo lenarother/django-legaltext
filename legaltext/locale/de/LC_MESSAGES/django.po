@@ -7,8 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 06:33+0200\n"
-"PO-Revision-Date: 2017-08-04 06:36+0200\n"
+"POT-Creation-Date: 2017-08-04 10:36+0200\n"
+"PO-Revision-Date: 2017-08-04 10:36+0200\n"
+"Last-Translator: Stephan Jaekel <stephan.jaekel@moccu.com>\n"
 "Language-Team: de <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.3.4\n"
-"Last-Translator: Stephan Jaekel <stephan.jaekel@moccu.com>\n"
 "X-Generator: Poedit 1.8.8\n"
 
 #: admin.py:47
@@ -27,11 +27,11 @@ msgstr "Aktuelle Version"
 msgid "Add new version"
 msgstr "Neue Version hinzufügen"
 
-#: admin.py:104 models.py:18 models.py:22 models.py:44
+#: admin.py:104 models.py:18 models.py:22 models.py:46
 msgid "Legal text"
 msgstr "Rechtstext"
 
-#: admin.py:109 models.py:47 models.py:87
+#: admin.py:109 models.py:49 models.py:89
 msgid "Text"
 msgstr "Text"
 
@@ -43,48 +43,51 @@ msgstr "Slug"
 msgid "Legal texts"
 msgstr "Rechtstext"
 
-#: models.py:45
+#: models.py:41
+msgid "I accept."
+msgstr "Ich bin einverstanden."
+
+#: models.py:47
 msgid "Valid from"
 msgstr "Gültig ab"
 
-#: models.py:48
+#: models.py:50
 msgid ""
 "You can use [block:foo]Your text[/block] to create a block with an anchor. "
 "Anchors ([anchor:foo]) can be used in checkbox texts to link to specific "
 "parts of the legal text."
 msgstr ""
-"Sie können [block:foo]Ein Text[/block] verwenden, um einen Absatz mit "
-"einer Sprungmarke zu erstellen. Auf diese Absätze kann in Checkbox Texten "
-"mit [anchor:foo] verlinkt werden."
+"Sie können [block:foo]Ein Text[/block] verwenden, um einen Absatz mit einer "
+"Sprungmarke zu erstellen. Auf diese Absätze kann in Checkbox Texten mit "
+"[anchor:foo] verlinkt werden."
 
-#: models.py:54 models.py:85
+#: models.py:56 models.py:87
 msgid "Legal text version"
 msgstr "Rechtstextversion"
 
-#: models.py:55
+#: models.py:57
 msgid "Legal text versions"
 msgstr "Rechtstextversion"
 
-#: models.py:88
+#: models.py:90
 msgid ""
 "You can use [anchor]Your text[/anchor] to create a link to the full legal "
 "text. If you use [anchor:foo]Your text[/anchor] the link will go to the "
 "block \"foo\" inside the legal text."
 msgstr ""
-"Sie können [anchor]Ein Text[/anchor] verwenden, um einen Link zum "
-"Rechtstext einzubinden. Wenn Sie [anchor:foo]Ein Text[/anchor] verwenden, "
-"wird der Link zum Rechtstext zusätzlich eine Sprungmarke zum Absatz \"foo"
-"\" beinhalten."
+"Sie können [anchor]Ein Text[/anchor] verwenden, um einen Link zum Rechtstext "
+"einzubinden. Wenn Sie [anchor:foo]Ein Text[/anchor] verwenden, wird der Link "
+"zum Rechtstext zusätzlich eine Sprungmarke zum Absatz \"foo\" beinhalten."
 
-#: models.py:94
+#: models.py:96
 msgid "Legal text checkbox"
 msgstr "Checkbox"
 
-#: models.py:95
+#: models.py:97
 msgid "Legal text Checkboxes"
 msgstr "Checkboxen"
 
-#: models.py:99
+#: models.py:101
 #, python-brace-format
 msgid "Checkbox for {0} ({1})"
 msgstr "Checkbox für {0} ({1})"

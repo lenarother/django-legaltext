@@ -35,9 +35,11 @@ class LegalText(models.Model):
     def get_current_version(self):
         version = self.legaltextversion_set.filter(
             valid_from__lte=timezone.now()).first()
-        if version:
-            return version
-        return LegalTextVersion.objects.get_or_create(legaltext=self)[0]
+        if not version:
+            version, created = LegalTextVersion.objects.get_or_create(legaltext=self)
+            if created:
+                version.checkboxes.create(content=ugettext('I accept.'))
+        return version
 
 
 class LegalTextVersion(models.Model):

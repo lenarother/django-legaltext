@@ -59,7 +59,7 @@ class LegalTextAdmin(admin.ModelAdmin):
 class LegalTextCheckboxInline(InitialExtraStackedInline):
     model = LegalTextCheckbox
     extra = 0
-    can_delete = False
+    min_num = 1
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.valid_from <= timezone.now():
