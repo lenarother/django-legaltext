@@ -10,10 +10,6 @@ django-legaltext
     :target: https://travis-ci.org/moccu/django-legaltext
     :alt: Latest Travis CI build status
 
-.. image:: https://coveralls.io/repos/moccu/django-legaltext/badge.svg
-    :target: https://coveralls.io/github/moccu/django-legaltext
-    :alt: Coverage of master build
-
 
 Legaltext is a Django application to help managing legal text versioning (e.g.
 terms of condition, pr privacy policy). It also supports versioning of the
