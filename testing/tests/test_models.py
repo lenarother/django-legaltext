@@ -92,13 +92,15 @@ class TestLegalTextVersion:
         legal_text_version = LegalTextVersionFactory.create(content='Text Text Text')
         assert legal_text_version.render_content() == '<p>Text Text Text</p>'
 
-    @pytest.mark.xfail
     def test_render_content_with_anchor(self):
         legal_text_version = LegalTextVersionFactory.create(
-            content='Text [[foo]]Text[[end]] Text')
+            content='Text [block:foo]Text[/block] Text [block:bar]Text bar[/block]')
 
         assert legal_text_version.render_content() == (
-            'Text <div class="foo"><span class="anchor" id="foo"></span>Text</div> Text')
+            '<p>Text <div class="legaltext-block legaltext-block-foo"><span id="foo">'
+            '</span><p>Text</p></div> Text <div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span><p>Text bar</p></div></p>'
+        )
 
 
 @pytest.mark.django_db
@@ -125,11 +127,12 @@ class TestLegalTextCheckbox:
         assert checkbox.render_content() == (
             'Checkbox <a href="/test-1/" title="test">test</a> text')
 
-    @pytest.mark.xfail
     def test_render_content_with_link_and_anchor(self):
         checkbox = LegalTextCheckboxFactory.create(
-            content='Checkbox [[test]] text', anchor='important',
-            legaltext_version__legaltext__slug='test-2')
+            legaltext_version__legaltext__slug='test-2',
+            content='Text [anchor:foo]Text[/anchor] Text [anchor]bar[/anchor]')
 
         assert checkbox.render_content() == (
-            'Checkbox <a href="/test-2/#important" title="test">test</a> text')
+            'Text <a href="/test-2/#foo" class="legaltext-anchor" target="_blank">Text'
+            '</a> Text <a href="/test-2/" class="legaltext-anchor" target="_blank">bar</a>'
+        )
