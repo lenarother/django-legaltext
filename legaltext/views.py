@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 
 from .models import LegalText
@@ -6,6 +8,10 @@ from .models import LegalText
 
 class LegaltextView(DetailView):
     model = LegalText
+
+    def get_object(self):
+        return get_object_or_404(
+            LegalText, Q(slug=self.kwargs['slug']) | Q(url_name=self.kwargs['slug']))
 
     def get_template_names(self):
         template_name = getattr(

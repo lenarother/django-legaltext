@@ -17,6 +17,9 @@ BLOCK_RE = re.compile('\[block\:([^\]]+)\](?:(.+?)\[/block\])', re.DOTALL)
 class LegalText(models.Model):
     name = models.CharField(_('Legal text'), max_length=64)
     slug = models.SlugField(_('Slug'), max_length=64, unique=True)
+    url_name = models.SlugField(
+        _('URL Name'), max_length=64, unique=True, blank=True, null=True, help_text=_(
+            'Optional URL name for the legal text. If not provided, the slug is used.'))
 
     class Meta:
         verbose_name = _('Legal text')
@@ -39,7 +42,11 @@ class LegalText(models.Model):
             version, created = LegalTextVersion.objects.get_or_create(legaltext=self)
             if created:
                 version.checkboxes.create(content=ugettext('I accept.'))
+
         return version
+
+    def get_absolute_url(self):
+        return reverse('legaltext', args=(self.url_name or self.slug,))
 
 
 class LegalTextVersion(models.Model):
@@ -106,7 +113,7 @@ class LegalTextCheckbox(models.Model):
     def render_content(self):
         def anchor_callback(match):
             return '<a href="{0}{1}" class="legaltext-anchor" target="_blank">{2}</a>'.format(
-                reverse('legaltext', args=(self.legaltext_version.legaltext.slug,)),
+                self.legaltext_version.legaltext.get_absolute_url(),
                 '#{0}'.format(match.group(1)) if match.group(1) else '',
                 match.group(2)
             )

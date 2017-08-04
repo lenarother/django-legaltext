@@ -39,6 +39,16 @@ class TestLegaltextView:
         assert isinstance(response.context['current_version'], LegalTextVersion)
         assert response.context['current_version'].legaltext.slug == test_slug
 
+    def test_get_with_url_name(self, client):
+        test_slug = 'test-foo-bar'
+        LegalTextFactory.create(slug=test_slug, url_name='foobar')
+        url = reverse('legaltext', kwargs={'slug': 'foobar'})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert isinstance(response.context['current_version'], LegalTextVersion)
+        assert response.context['current_version'].legaltext.slug == test_slug
+
     def test_get_non_existing_legaltext(self, client):
         url = reverse('legaltext', kwargs={'slug': 'no-such-legaltext'})
         response = client.get(url)
