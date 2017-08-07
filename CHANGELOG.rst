@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.1.1
+0.2.0
 ~~~~~
 
 * Add optional url name for legal texts as an alternative to the default slug
