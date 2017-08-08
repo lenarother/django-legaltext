@@ -100,8 +100,26 @@ class TestLegalTextVersion:
 
         assert legal_text_version.render_content() == (
             '<p>Text <div class="legaltext-block legaltext-block-foo"><span id="foo">'
-            '</span><p>Text</p></div> Text <div class="legaltext-block legaltext-block-bar">'
-            '<span id="bar"></span><p>Text bar</p></div></p>'
+            '</span>Text</div> Text <div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span>Text bar</div></p>'
+        )
+
+    def test_render_content_with_nested_anchor(self):
+        legal_text_version = LegalTextVersionFactory.create(
+            content='Text[block:foo]Text Text[block:bar]Text bar[/block][/block]')
+
+        assert legal_text_version.render_content() == (
+            '<p>Text<div class="legaltext-block legaltext-block-foo"><span id="foo">'
+            '</span>Text Text<div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span>Text bar</div></div></p>'
+        )
+
+    def test_render_content_unbalanced_blocks(self):
+        legal_text_version = LegalTextVersionFactory.create(
+            content='Text [block:foo]Text Text [block:bar]Text bar[/block]')
+
+        assert legal_text_version.render_content() == (
+            '<p>Text [block:foo]Text Text [block:bar]Text bar[/block]</p>'
         )
 
 
@@ -138,3 +156,10 @@ class TestLegalTextCheckbox:
             'Text <a href="/test-2/#foo" class="legaltext-anchor" target="_blank">Text'
             '</a> Text <a href="/test-2/" class="legaltext-anchor" target="_blank">bar</a>'
         )
+
+    def test_render_content_with_linebreaks(self):
+        checkbox = LegalTextCheckboxFactory.create(
+            legaltext_version__legaltext__slug='test-2',
+            content='Text Text\nText foo\n\nbar')
+
+        assert checkbox.render_content() == 'Text Text<br />Text foo<br /><br />bar'

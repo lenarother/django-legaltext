@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from django.utils.text import normalize_newlines
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from markymark.fields import MarkdownField
@@ -11,7 +12,8 @@ from markymark.utils import render_markdown
 
 
 ANCHOR_RE = re.compile('\[anchor(?:\:([^\]]+))?\](?:(.+?)\[/anchor\])')
-BLOCK_RE = re.compile('\[block\:([^\]]+)\](?:(.+?)\[/block\])', re.DOTALL)
+BLOCK_OPEN_RE = re.compile('\[block\:([^\]]+)\]')
+BLOCK_CLOSE_RE = re.compile('\[/block\]')
 
 
 class LegalText(models.Model):
@@ -75,18 +77,30 @@ class LegalTextVersion(models.Model):
     def render_content(self):
         anchor_class = getattr(settings, 'LEGALTEXT_ANCHOR_CLASS', None)
 
-        def block_callback(match):
+        def block_open_callback(match):
+            block_open_callback.count += 1
             return (
                 '<div class="legaltext-block legaltext-block-{0}">'
-                '<span id="{0}"{1}></span>{2}</div>'
+                '<span id="{0}"{1}></span>'
             ).format(
                 match.group(1),
                 ' class="{0}"'.format(anchor_class) if anchor_class else '',
-                render_markdown(match.group(2))
             )
+        block_open_callback.count = 0
 
-        content = BLOCK_RE.sub(block_callback, self.content)
-        return render_markdown(content)
+        def block_close_callback(match):
+            block_close_callback.count += 1
+            return '</div>'
+        block_close_callback.count = 0
+
+        content = BLOCK_OPEN_RE.sub(block_open_callback, self.content)
+        content = BLOCK_CLOSE_RE.sub(block_close_callback, content)
+
+        return render_markdown(
+            content
+            if block_open_callback.count == block_close_callback.count
+            else self.content
+        )
 
 
 class LegalTextCheckbox(models.Model):
@@ -118,5 +132,8 @@ class LegalTextCheckbox(models.Model):
                 match.group(2)
             )
 
-        content = ANCHOR_RE.sub(anchor_callback, self.content)
+        content = ANCHOR_RE.sub(
+            anchor_callback,
+            normalize_newlines(self.content).replace('\n', '<br />')
+        )
         return render_markdown(content).replace('<p>', '').replace('</p>', '')
