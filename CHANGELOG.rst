@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.1
+~~~~~
+
+* Allow nested anchor blocks and newlines in checkbox texts.
+
 0.2.0
 ~~~~~
 
