@@ -94,31 +94,45 @@ class TestLegalTextVersion:
         legal_text_version = LegalTextVersionFactory.create(content='Text Text Text')
         assert legal_text_version.render_content() == '<p>Text Text Text</p>'
 
-    def test_render_content_with_anchor(self):
+    def test_render_content_with_block(self):
         legal_text_version = LegalTextVersionFactory.create(
-            content='Text [block:foo]Text[/block] Text [block:bar]Text bar[/block]')
+            content='Text[block:foo]Text **bar** foo[/block] Text[block:bar]Text bar[/block]')
 
-        assert legal_text_version.render_content() == (
-            '<p>Text <div class="legaltext-block legaltext-block-foo"><span id="foo">'
-            '</span>Text</div> Text <div class="legaltext-block legaltext-block-bar">'
-            '<span id="bar"></span>Text bar</div></p>'
+        assert legal_text_version.render_content().replace('\n', '') == (
+            '<p>Text</p><div class="legaltext-block legaltext-block-foo"><span id="foo">'
+            '</span><p>Text <strong>bar</strong> foo</p></div><p>Text</p>'
+            '<div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span><p>Text bar</p></div>'
         )
 
-    def test_render_content_with_nested_anchor(self):
+    def test_render_content_with_multiline_block(self):
         legal_text_version = LegalTextVersionFactory.create(
-            content='Text[block:foo]Text Text[block:bar]Text bar[/block][/block]')
+            content='Text\n\n[block:foo]\nText **bar**\n\nfoo\n[/block]\n\n'
+            'Text\n\n[block:bar]\nText bar\n[/block] lorem'
+        )
 
-        assert legal_text_version.render_content() == (
-            '<p>Text<div class="legaltext-block legaltext-block-foo"><span id="foo">'
-            '</span>Text Text<div class="legaltext-block legaltext-block-bar">'
-            '<span id="bar"></span>Text bar</div></div></p>'
+        assert legal_text_version.render_content().replace('\n', '') == (
+            '<p>Text</p><div class="legaltext-block legaltext-block-foo"><span id="foo">'
+            '</span><p>Text <strong>bar</strong></p><p>foo</p></div><p>Text</p>'
+            '<div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span><p>Text bar</p></div><p>lorem</p>'
+        )
+
+    def test_render_content_with_nested_block(self):
+        legal_text_version = LegalTextVersionFactory.create(
+            content='Text\n\n[block:foo]Text Text\n\n[block:bar]Text bar[/block][/block]')
+
+        assert legal_text_version.render_content().replace('\n', '') == (
+            '<p>Text</p><div class="legaltext-block legaltext-block-foo"><span id="foo">'
+            '</span><p>Text Text</p><div class="legaltext-block legaltext-block-bar">'
+            '<span id="bar"></span><p>Text bar</p></div></div>'
         )
 
     def test_render_content_unbalanced_blocks(self):
         legal_text_version = LegalTextVersionFactory.create(
             content='Text [block:foo]Text Text [block:bar]Text bar[/block]')
 
-        assert legal_text_version.render_content() == (
+        assert legal_text_version.render_content().replace('\n', '') == (
             '<p>Text [block:foo]Text Text [block:bar]Text bar[/block]</p>'
         )
 

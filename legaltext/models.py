@@ -12,8 +12,10 @@ from markymark.utils import render_markdown
 
 
 ANCHOR_RE = re.compile('\[anchor(?:\:([^\]]+))?\](?:(.+?)\[/anchor\])')
-BLOCK_OPEN_RE = re.compile('\[block\:([^\]]+)\]')
-BLOCK_CLOSE_RE = re.compile('\[/block\]')
+BLOCK_OPEN_NL_RE = re.compile('(?:\n\n|\n)?(\[block\:[^\]]+\])(?:\n\n|\n)?', re.DOTALL)
+BLOCK_CLOSE_NL_RE = re.compile('(?:\n\n|\n)?(\[/block\])(?:\n\n|\n)?', re.DOTALL)
+BLOCK_OPEN_RE = re.compile('(?:<p>)?\[block\:([^\]]+)\](?:</p>)?')
+BLOCK_CLOSE_RE = re.compile('(?:<p>)?\[/block\](?:</p>)?')
 
 
 class LegalText(models.Model):
@@ -77,6 +79,9 @@ class LegalTextVersion(models.Model):
     def render_content(self):
         anchor_class = getattr(settings, 'LEGALTEXT_ANCHOR_CLASS', None)
 
+        def block_nl_callback(match):
+            return '\n\n{0}\n\n'.format(match.group(1))
+
         def block_open_callback(match):
             block_open_callback.count += 1
             return (
@@ -93,14 +98,16 @@ class LegalTextVersion(models.Model):
             return '</div>'
         block_close_callback.count = 0
 
-        content = BLOCK_OPEN_RE.sub(block_open_callback, self.content)
+        content = BLOCK_OPEN_NL_RE.sub(block_nl_callback, self.content)
+        content = BLOCK_CLOSE_NL_RE.sub(block_nl_callback, content)
+
+        content = render_markdown(content)
+        content = BLOCK_OPEN_RE.sub(block_open_callback, content)
         content = BLOCK_CLOSE_RE.sub(block_close_callback, content)
 
-        return render_markdown(
-            content
-            if block_open_callback.count == block_close_callback.count
-            else self.content
-        )
+        if block_open_callback.count == block_close_callback.count:
+            return content
+        return render_markdown(self.content)
 
 
 class LegalTextCheckbox(models.Model):
