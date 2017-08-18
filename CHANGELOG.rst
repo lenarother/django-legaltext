@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.2
+~~~~~
+
+* Improved markdown rendering inside custom html elements
+
 0.2.1
 ~~~~~
 
