@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.3
+~~~~~
+
+* Fixed bug in default value of LegalTextField
+
 0.2.2
 ~~~~~
 
