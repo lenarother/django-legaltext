@@ -13,7 +13,7 @@ class CurrentLegalText(object):
         self.slug = slug
 
     def __call__(self):
-        return LegalText.current_version(self.slug)
+        return LegalText.current_version(self.slug).pk
 
 
 class LegalTextField(models.ForeignKey):

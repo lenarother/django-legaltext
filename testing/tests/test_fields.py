@@ -16,8 +16,8 @@ class TestCurrentLegalText:
 
     def test_call(self):
         obj = CurrentLegalText('foo')
-        version = obj()
-        assert isinstance(version, LegalTextVersion)
+        version_id = obj()
+        version = LegalTextVersion.objects.get(pk=version_id)
         assert version.legaltext.slug == 'foo'
 
 
