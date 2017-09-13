@@ -156,4 +156,4 @@ class LegalTextCheckbox(models.Model):
     def save(self, *args, **kwargs):
         if not self.order:
             self.order = self._get_next_checkbox_numeral()
-        super().save(*args, **kwargs)
+        super(LegalTextCheckbox, self).save(*args, **kwargs)
