@@ -1,10 +1,11 @@
 from datetime import datetime
 
 import pytest
+from django.db.utils import IntegrityError
 from django.utils import timezone
 from freezegun import freeze_time
 
-from legaltext.models import LegalText, LegalTextVersion
+from legaltext.models import LegalText, LegalTextCheckbox, LegalTextVersion
 from testing.factories import (
     LegalTextCheckboxFactory, LegalTextFactory, LegalTextVersionFactory)
 
@@ -177,3 +178,38 @@ class TestLegalTextCheckbox:
             content='Text Text\nText foo\n\nbar')
 
         assert checkbox.render_content() == 'Text Text<br />Text foo<br /><br />bar'
+
+    def test_save_checkbox(self):
+        legal_text_version = LegalTextVersionFactory.create()
+        checkbox_1 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
+        checkbox_2 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
+
+        assert checkbox_1.order == 1
+        assert checkbox_2.order == 2
+
+    def test_get_next_checkbox_numeral(self):
+        legal_text_version = LegalTextVersionFactory.create()
+        checkbox_1 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
+        checkbox_2 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
+
+        assert checkbox_1._get_next_checkbox_numeral() == 3
+        assert checkbox_2._get_next_checkbox_numeral() == 3
+
+    def test_checkbox_ordering(self):
+        legal_text_version = LegalTextVersionFactory.create()
+        checkbox_3 = LegalTextCheckboxFactory.create(
+            legaltext_version=legal_text_version, order=3)
+        checkbox_1 = LegalTextCheckboxFactory.create(
+            legaltext_version=legal_text_version, order=1)
+        checkbox_2 = LegalTextCheckboxFactory.create(
+            legaltext_version=legal_text_version, order=2)
+        qs = LegalTextCheckbox.objects.all()
+
+        assert list(qs) == [checkbox_1, checkbox_2, checkbox_3]
+
+    def test_checkbox_order_unique(self):
+        legal_text_version = LegalTextVersionFactory.create()
+        LegalTextCheckboxFactory.create(legaltext_version=legal_text_version, order=5)
+
+        with pytest.raises(IntegrityError):
+            LegalTextCheckboxFactory.create(legaltext_version=legal_text_version, order=5)
