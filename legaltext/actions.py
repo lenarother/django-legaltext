@@ -26,18 +26,14 @@ def export_legal_text_version_action(description=None):
         archive = zipfile.ZipFile(buff, 'w', zipfile.ZIP_DEFLATED)
 
         for legaltext in queryset:
-            content = io.StringIO()
-            content.write(legaltext.content)
             filename = get_file_name(legaltext)
-            archive.writestr(filename, content.getvalue())
+            archive.writestr(filename, legaltext.content)
 
             # TODO: change i to checkbox.order when feature/sortable-checkbox is in master
             # TODO: and update translations
             for i, checkbox in enumerate(legaltext.checkboxes.all()):
-                checkbox_content = io.StringIO()
-                checkbox_content.write(checkbox.content)
                 checkbox_filename = get_file_name(legaltext, i + 1)
-                archive.writestr(checkbox_filename, checkbox_content.getvalue())
+                archive.writestr(checkbox_filename, checkbox.content)
 
         dt_now = timezone.now().strftime('%Y-%m-%d_%H-%M-%S')
         zip_filename = 'legaltext_export_{0}.zip'.format(dt_now)
