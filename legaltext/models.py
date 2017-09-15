@@ -147,13 +147,8 @@ class LegalTextCheckbox(models.Model):
         )
         return render_markdown(content).replace('<p>', '').replace('</p>', '')
 
-    def _get_next_checkbox_numeral(self):
-        last_checkbox = self.legaltext_version.checkboxes.last()
-        if last_checkbox:
-            return last_checkbox.order + 1
-        return 1
-
     def save(self, *args, **kwargs):
         if not self.order:
-            self.order = self._get_next_checkbox_numeral()
+            self.order = (self.legaltext_version.checkboxes.aggregate(
+                next_order=models.Max('order'))['next_order'] or 0) + 1
         super(LegalTextCheckbox, self).save(*args, **kwargs)

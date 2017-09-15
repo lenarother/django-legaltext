@@ -187,14 +187,6 @@ class TestLegalTextCheckbox:
         assert checkbox_1.order == 1
         assert checkbox_2.order == 2
 
-    def test_get_next_checkbox_numeral(self):
-        legal_text_version = LegalTextVersionFactory.create()
-        checkbox_1 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
-        checkbox_2 = LegalTextCheckboxFactory.create(legaltext_version=legal_text_version)
-
-        assert checkbox_1._get_next_checkbox_numeral() == 3
-        assert checkbox_2._get_next_checkbox_numeral() == 3
-
     def test_checkbox_ordering(self):
         legal_text_version = LegalTextVersionFactory.create()
         checkbox_3 = LegalTextCheckboxFactory.create(
