@@ -70,7 +70,7 @@ class TestLegalTextCheckboxInline:
         cb = LegalTextCheckboxFactory.create(content='foo')
         assert self.modeladmin.get_initial_extra(
             rf.get('/', data={'legaltext': cb.legaltext_version.legaltext.pk}), None
-        ) == [{'content': 'foo'}]
+        ) == [{'content': 'foo', 'order': cb.pk}]
 
     def test_get_initial_extra_change(self, rf):
         assert self.modeladmin.get_initial_extra(

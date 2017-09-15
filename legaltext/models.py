@@ -119,11 +119,13 @@ class LegalTextCheckbox(models.Model):
         'If you use [anchor:foo]Your text[/anchor] the link will go to the block "foo" '
         'inside the legal text.'
     ))
+    order = models.PositiveIntegerField(_('Order'), blank=True, null=True)
 
     class Meta:
         verbose_name = _('Legal text checkbox')
         verbose_name_plural = _('Legal text Checkboxes')
-        ordering = ('legaltext_version',)
+        ordering = ('legaltext_version', 'order')
+        unique_together = (('legaltext_version', 'order'),)
 
     def __str__(self):
         return ugettext('Checkbox for {0} ({1})').format(
@@ -144,3 +146,9 @@ class LegalTextCheckbox(models.Model):
             normalize_newlines(self.content).replace('\n', '<br />')
         )
         return render_markdown(content).replace('<p>', '').replace('</p>', '')
+
+    def save(self, *args, **kwargs):
+        if not self.order:
+            self.order = (self.legaltext_version.checkboxes.aggregate(
+                next_order=models.Max('order'))['next_order'] or 0) + 1
+        super(LegalTextCheckbox, self).save(*args, **kwargs)

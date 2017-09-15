@@ -63,7 +63,7 @@ class LegalTextCheckboxInline(InitialExtraStackedInline):
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.valid_from <= timezone.now():
-            return ('content',)
+            return ('content', 'order')
         return ()
 
     def get_max_num(self, request, obj=None):
@@ -77,7 +77,7 @@ class LegalTextCheckboxInline(InitialExtraStackedInline):
             legaltext = LegalText.objects.filter(pk=request.GET['legaltext']).first()
             if legaltext:
                 for checkbox in legaltext.get_current_version().checkboxes.all():
-                    initial.append({'content': checkbox.content})
+                    initial.append({'content': checkbox.content, 'order': checkbox.order})
         return initial
 
 
