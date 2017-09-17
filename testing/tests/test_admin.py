@@ -141,11 +141,11 @@ class TestLegalTextVersionAdmin:
             'content': 'foobar', 'legaltext': '1'}
 
     @freeze_time('2016-01-02 09:21:55')
-    def test_action_export_legal_text_version(self, admin_client):
+    def test_export_legaltext_version_action(self, admin_client):
         legal_text_version = LegalTextVersionFactory.create(content='foobar')
         url = reverse('admin:legaltext_legaltextversion_changelist')
         data = {
-            'action': 'export_legal_text_version',
+            'action': 'export_legaltext_version',
             '_selected_action': [str(legal_text_version.pk)]
         }
         response = admin_client.post(url, data)

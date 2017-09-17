@@ -7,8 +7,9 @@ from django.utils.timezone import localtime
 from django.utils.translation import ugettext_lazy as _
 
 
-def export_legal_text_version_action(description=None):
+class Exporter(object):
 
+    @staticmethod
     def get_file_name(legaltext, checkbox_i=None):
         content_type = 'content'
         if checkbox_i:
@@ -21,33 +22,43 @@ def export_legal_text_version_action(description=None):
             content_type=content_type,
         )
 
-    def export_legal_text_version(modeladmin, request, queryset):
+    @staticmethod
+    def get_archive_name():
+        dt_now = timezone.now().strftime('%Y-%m-%d_%H-%M-%S')
+        return 'legaltext_export_{0}.zip'.format(dt_now)
+
+    @classmethod
+    def write_files(cls, queryset):
         buff = io.BytesIO()
         archive = zipfile.ZipFile(buff, 'w', zipfile.ZIP_DEFLATED)
 
         for legaltext in queryset:
-            filename = get_file_name(legaltext)
+            filename = cls.get_file_name(legaltext)
             archive.writestr(filename, legaltext.content)
 
             # TODO: change i to checkbox.order when feature/sortable-checkbox is in master
             # TODO: and update translations
             for i, checkbox in enumerate(legaltext.checkboxes.all()):
-                checkbox_filename = get_file_name(legaltext, i + 1)
+                checkbox_filename = cls.get_file_name(legaltext, i + 1)
                 archive.writestr(checkbox_filename, checkbox.content)
-
-        dt_now = timezone.now().strftime('%Y-%m-%d_%H-%M-%S')
-        zip_filename = 'legaltext_export_{0}.zip'.format(dt_now)
-        response = HttpResponse(content_type='application/zip')
-        response['Content-Disposition'] = 'filename={0}'.format(zip_filename)
 
         archive.close()
         buff.flush()
         legaltext_zip = buff.getvalue()
         buff.close()
+        return legaltext_zip
 
+    @classmethod
+    def export_legaltext_version(cls, modeladmin, request, queryset):
+        legaltext_zip = cls.write_files(queryset)
+        zip_name = cls.get_archive_name()
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'filename={0}'.format(zip_name)
         response.write(legaltext_zip)
         return response
 
-    export_legal_text_version.short_description = description or _(
-        'Export selected texts as zip')
-    return export_legal_text_version
+    @classmethod
+    def export_legaltext_version_action(cls, short_description=None):
+        short_description = short_description or _('Export selected versions')
+        setattr(cls.export_legaltext_version.__func__, 'short_description', short_description)
+        return cls.export_legaltext_version
