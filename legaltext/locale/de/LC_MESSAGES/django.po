@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 12:00+0200\n"
+"POT-Creation-Date: 2017-09-13 14:37+0200\n"
 "PO-Revision-Date: 2017-08-04 12:01+0200\n"
 "Last-Translator: Stephan Jaekel <stephan.jaekel@moccu.com>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -27,42 +27,42 @@ msgstr "Aktuelle Version"
 msgid "Add new version"
 msgstr "Neue Version hinzufügen"
 
-#: admin.py:104 models.py:18 models.py:25 models.py:53
+#: admin.py:104 models.py:22 models.py:29 models.py:57
 msgid "Legal text"
 msgstr "Rechtstext"
 
-#: admin.py:109 models.py:56 models.py:96
+#: admin.py:109 models.py:60 models.py:117
 msgid "Text"
 msgstr "Text"
 
-#: models.py:19
+#: models.py:23
 msgid "Slug"
 msgstr "Slug"
 
-#: models.py:21
+#: models.py:25
 msgid "URL Name"
 msgstr "URL Kürzel"
 
-#: models.py:22
+#: models.py:26
 msgid ""
 "Optional URL name for the legal text. If not provided, the slug is used."
 msgstr ""
 "Optionales URL Kürzel für den Rechtstext. Wenn kein URL Kürzel angegeben "
 "ist, wird der Slug verwendet."
 
-#: models.py:26
+#: models.py:30
 msgid "Legal texts"
 msgstr "Rechtstext"
 
-#: models.py:44
+#: models.py:48
 msgid "I accept."
 msgstr "Ich bin einverstanden."
 
-#: models.py:54
+#: models.py:58
 msgid "Valid from"
 msgstr "Gültig ab"
 
-#: models.py:57
+#: models.py:61
 msgid ""
 "You can use [block:foo]Your text[/block] to create a block with an anchor. "
 "Anchors ([anchor:foo]) can be used in checkbox texts to link to specific "
@@ -72,15 +72,15 @@ msgstr ""
 "Sprungmarke zu erstellen. Auf diese Absätze kann in Checkbox Texten mit "
 "[anchor:foo] verlinkt werden."
 
-#: models.py:63 models.py:94
+#: models.py:67 models.py:115
 msgid "Legal text version"
 msgstr "Rechtstextversion"
 
-#: models.py:64
+#: models.py:68
 msgid "Legal text versions"
 msgstr "Rechtstextversion"
 
-#: models.py:97
+#: models.py:118
 msgid ""
 "You can use [anchor]Your text[/anchor] to create a link to the full legal "
 "text. If you use [anchor:foo]Your text[/anchor] the link will go to the "
@@ -90,15 +90,19 @@ msgstr ""
 "einzubinden. Wenn Sie [anchor:foo]Ein Text[/anchor] verwenden, wird der Link "
 "zum Rechtstext zusätzlich eine Sprungmarke zum Absatz \"foo\" beinhalten."
 
-#: models.py:103
+#: models.py:122
+msgid "Order"
+msgstr "Reihenfolge"
+
+#: models.py:125
 msgid "Legal text checkbox"
 msgstr "Checkbox"
 
-#: models.py:104
+#: models.py:126
 msgid "Legal text Checkboxes"
 msgstr "Checkboxen"
 
-#: models.py:108
+#: models.py:131
 #, python-brace-format
 msgid "Checkbox for {0} ({1})"
 msgstr "Checkbox für {0} ({1})"
