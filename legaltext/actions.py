@@ -36,10 +36,8 @@ class Exporter(object):
             filename = cls.get_file_name(legaltext)
             archive.writestr(filename, legaltext.content)
 
-            # TODO: change i to checkbox.order when feature/sortable-checkbox is in master
-            # TODO: and update translations
             for i, checkbox in enumerate(legaltext.checkboxes.all()):
-                checkbox_filename = cls.get_file_name(legaltext, i + 1)
+                checkbox_filename = cls.get_file_name(legaltext, checkbox.order or (i + 1))
                 archive.writestr(checkbox_filename, checkbox.content)
 
         archive.close()
