@@ -3,6 +3,7 @@ from django.db.models import Q
 
 from ..models import LegalText
 
+
 register = template.Library()
 
 
