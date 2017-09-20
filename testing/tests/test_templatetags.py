@@ -1,8 +1,6 @@
 import pytest
 from django.template import Context, Template
-from django.template.base import TemplateSyntaxError
-# from django.core.exceptions import NoReverseMatch
-from django.urls.exceptions import NoReverseMatch
+from django.template.exceptions import TemplateSyntaxError
 
 from testing.factories import LegalTextFactory
 
@@ -89,8 +87,9 @@ class TestLegaltextUrl:
             '{% load legaltext_tags %}{% legaltext_url "foo-bar-test" %}')
         context = Context({})
 
-        with pytest.raises(NoReverseMatch):
-            template.render(context)
+        rendered = template.render(context)
+
+        assert rendered == ''
 
     def test_no_legaltext_as_variable(self):
         template = Template(
