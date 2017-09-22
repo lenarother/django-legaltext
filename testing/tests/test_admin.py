@@ -2,7 +2,9 @@ from datetime import timedelta
 
 import pytest
 from django.contrib import admin
+from django.core.urlresolvers import reverse
 from django.utils import timezone
+from freezegun import freeze_time
 
 from legaltext.admin import LegalTextAdmin, LegalTextCheckboxInline, LegalTextVersionAdmin
 from legaltext.models import LegalText, LegalTextCheckbox, LegalTextVersion
@@ -137,3 +139,16 @@ class TestLegalTextVersionAdmin:
         assert response.status_code == 200
         assert response.context_data['adminform'].form.initial == {
             'content': 'foobar', 'legaltext': '1'}
+
+    @freeze_time('2016-01-02 09:21:55')
+    def test_export_legaltext_version_action(self, admin_client):
+        legal_text_version = LegalTextVersionFactory.create(content='foobar')
+        url = reverse('admin:legaltext_legaltextversion_changelist')
+        data = {
+            'action': 'export_legaltext_version',
+            '_selected_action': [str(legal_text_version.pk)]
+        }
+        response = admin_client.post(url, data)
+        assert response['Content-Type'] == 'application/zip'
+        assert response['Content-Disposition'] == (
+            'filename=legaltext_export_2016-01-02_09-21-55.zip')

@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
+from .actions import Exporter
 from .models import LegalText, LegalTextCheckbox, LegalTextVersion
 from .utils import InitialExtraStackedInline
 
@@ -87,6 +88,7 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
     list_filter = ('legaltext',)
     inlines = (LegalTextCheckboxInline,)
     form = LegalTextVersionAdminForm
+    actions = (Exporter.export_legaltext_version_action(),)
 
     def get_fieldsets(self, request, obj=None):
         if obj is None or obj.valid_from > timezone.now():
