@@ -20,9 +20,9 @@ BLOCK_CLOSE_RE = re.compile('(?:<p>)?\[/block\](?:</p>)?')
 
 class LegalText(models.Model):
     name = models.CharField(_('Legal text'), max_length=64)
-    slug = models.SlugField(_('Slug'), max_length=64, unique=True)
+    slug = models.SlugField(_('Slug'), max_length=128, unique=True)
     url_name = models.SlugField(
-        _('URL Name'), max_length=64, unique=True, blank=True, null=True, help_text=_(
+        _('URL Name'), max_length=128, unique=True, blank=True, null=True, help_text=_(
             'Optional URL name for the legal text. If not provided, the slug is used.'))
 
     class Meta:
