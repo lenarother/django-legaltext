@@ -78,6 +78,20 @@ class TestLegalText:
         assert version.content == 'Test content 2'
         assert version.pk == version_present.pk
 
+    def test_url_name_is_unique(self):
+        LegalTextFactory.create(url_name='foo-bar-test')
+        with pytest.raises(IntegrityError):
+            LegalTextFactory.create(url_name='foo-bar-test')
+
+    def test_url_name_is_unique_with_blank(self):
+        LegalTextFactory.create(url_name='')
+        with pytest.raises(IntegrityError):
+            LegalTextFactory.create(url_name='')
+
+    def test_url_name_is_not_unique_with_none(self):
+        LegalTextFactory.create(url_name=None)
+        LegalTextFactory.create(url_name=None)
+
 
 @pytest.mark.django_db
 class TestLegalTextVersion:

@@ -39,6 +39,29 @@ class TestLegalTextAdmin:
         html = self.modeladmin.add_new_version_link(legal_text)
         assert '/legaltextversion/add/?legaltext={0}'.format(legal_text.pk) in html
 
+    def test_url_name_is_unique(self, admin_client):
+        url = reverse('admin:legaltext_legaltext_add')
+        data = {'name': 'First', 'slug': 'first', 'url_name': 'first'}
+        duplicated_data = {'name': 'Second', 'slug': 'second', 'url_name': 'first'}
+
+        admin_client.post(url, data)
+        response = admin_client.post(url, duplicated_data)
+
+        assert response.status_code == 200
+        assert LegalText.objects.count() == 1
+        assert len(response.context['errors']) == 1
+
+    def test_url_name_can_be_blank(self, admin_client):
+        url = reverse('admin:legaltext_legaltext_add')
+        data = {'name': 'First', 'slug': 'first', 'url_name': ''}
+        other_data = {'name': 'Second', 'slug': 'second', 'url_name': ''}
+
+        admin_client.post(url, data)
+        response = admin_client.post(url, other_data)
+
+        assert response.status_code == 302
+        assert LegalText.objects.count() == 2
+
 
 @pytest.mark.django_db
 class TestLegalTextCheckboxInline:
