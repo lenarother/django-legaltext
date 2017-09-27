@@ -78,6 +78,10 @@ class TestLegalText:
         assert version.content == 'Test content 2'
         assert version.pk == version_present.pk
 
+    def test_get_absolute_url(self):
+        legal_text = LegalTextFactory.create(name='Foo Bar Text', slug='foo-bar-test')
+        assert legal_text.get_absolute_url() == '/foo-bar-test/'
+
     def test_url_name_is_unique(self):
         LegalTextFactory.create(url_name='foo-bar-test')
         with pytest.raises(IntegrityError):

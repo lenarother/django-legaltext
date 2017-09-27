@@ -26,7 +26,8 @@ The application consists of multiple parts and helpers:
   auto-fetched default of current version)
 * Form field to render the widget which outputs the configured checkboxes just
   using the legal text slug
-* Admin interface to maintain the legal texts, adding new version with prefilling
+* Admin interface to maintain the legal texts, adding new version with prefilling, and export
+* Templatetag legaltext_url
 
 
 Installation
@@ -113,6 +114,8 @@ There are some more settings you can set to change the applcation
   Choose a different template to use in widget for specific slugs
 * `LEGALTEXT_WIDGET_ATTRS`
   Add extra attributes to checkbox input elements
+* `LEGALTEXT_SILENCE_TEMPLATE_ERRORS`
+  Silence errors for legaltext_url templatetag if legaltext does not exist
 
 
 Resources
