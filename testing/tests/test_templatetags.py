@@ -1,4 +1,5 @@
 import pytest
+from django.core.urlresolvers import NoReverseMatch
 from django.template import Context, Template
 from django.template.exceptions import TemplateSyntaxError
 
@@ -87,11 +88,30 @@ class TestLegaltextUrl:
             '{% load legaltext_tags %}{% legaltext_url "foo-bar-test" %}')
         context = Context({})
 
+        with pytest.raises(NoReverseMatch):
+            template.render(context)
+
+    def test_no_legaltext_as_variable(self):
+        template = Template(
+            '{% load legaltext_tags %}{% legaltext_url "foo-bar-test" as my_url %}'
+            '{{ my_url }}')
+        context = Context({})
+
+        with pytest.raises(NoReverseMatch):
+            template.render(context)
+
+    def test_no_legaltext_silent(self, settings):
+        settings.LEGALTEXT_SILENCE_TEMPLATE_ERRORS = True
+        template = Template(
+            '{% load legaltext_tags %}{% legaltext_url "foo-bar-test" %}')
+        context = Context({})
+
         rendered = template.render(context)
 
         assert rendered == ''
 
-    def test_no_legaltext_as_variable(self):
+    def test_no_legaltext_as_variable_silence(self, settings):
+        settings.LEGALTEXT_SILENCE_TEMPLATE_ERRORS = True
         template = Template(
             '{% load legaltext_tags %}{% legaltext_url "foo-bar-test" as my_url %}'
             '{{ my_url }}')
