@@ -82,6 +82,20 @@ class TestLegalText:
         legal_text = LegalTextFactory.create(name='Foo Bar Text', slug='foo-bar-test')
         assert legal_text.get_absolute_url() == '/foo-bar-test/'
 
+    def test_url_name_is_unique(self):
+        LegalTextFactory.create(url_name='foo-bar-test')
+        with pytest.raises(IntegrityError):
+            LegalTextFactory.create(url_name='foo-bar-test')
+
+    def test_url_name_is_unique_with_blank(self):
+        LegalTextFactory.create(url_name='')
+        with pytest.raises(IntegrityError):
+            LegalTextFactory.create(url_name='')
+
+    def test_url_name_is_not_unique_with_none(self):
+        LegalTextFactory.create(url_name=None)
+        LegalTextFactory.create(url_name=None)
+
 
 @pytest.mark.django_db
 class TestLegalTextVersion:

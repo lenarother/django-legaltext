@@ -2,7 +2,9 @@ from datetime import timedelta
 
 import pytest
 from django.contrib import admin
+from django.core.urlresolvers import reverse
 from django.utils import timezone
+from freezegun import freeze_time
 
 from legaltext.admin import LegalTextAdmin, LegalTextCheckboxInline, LegalTextVersionAdmin
 from legaltext.models import LegalText, LegalTextCheckbox, LegalTextVersion
@@ -36,6 +38,29 @@ class TestLegalTextAdmin:
         legal_text = LegalTextFactory.create()
         html = self.modeladmin.add_new_version_link(legal_text)
         assert '/legaltextversion/add/?legaltext={0}'.format(legal_text.pk) in html
+
+    def test_url_name_is_unique(self, admin_client):
+        url = reverse('admin:legaltext_legaltext_add')
+        data = {'name': 'First', 'slug': 'first', 'url_name': 'first'}
+        duplicated_data = {'name': 'Second', 'slug': 'second', 'url_name': 'first'}
+
+        admin_client.post(url, data)
+        response = admin_client.post(url, duplicated_data)
+
+        assert response.status_code == 200
+        assert LegalText.objects.count() == 1
+        assert len(response.context['errors']) == 1
+
+    def test_url_name_can_be_blank(self, admin_client):
+        url = reverse('admin:legaltext_legaltext_add')
+        data = {'name': 'First', 'slug': 'first', 'url_name': ''}
+        other_data = {'name': 'Second', 'slug': 'second', 'url_name': ''}
+
+        admin_client.post(url, data)
+        response = admin_client.post(url, other_data)
+
+        assert response.status_code == 302
+        assert LegalText.objects.count() == 2
 
 
 @pytest.mark.django_db
@@ -137,3 +162,16 @@ class TestLegalTextVersionAdmin:
         assert response.status_code == 200
         assert response.context_data['adminform'].form.initial == {
             'content': 'foobar', 'legaltext': '1'}
+
+    @freeze_time('2016-01-02 09:21:55')
+    def test_export_legaltext_version_action(self, admin_client):
+        legal_text_version = LegalTextVersionFactory.create(content='foobar')
+        url = reverse('admin:legaltext_legaltextversion_changelist')
+        data = {
+            'action': 'export_legaltext_version',
+            '_selected_action': [str(legal_text_version.pk)]
+        }
+        response = admin_client.post(url, data)
+        assert response['Content-Type'] == 'application/zip'
+        assert response['Content-Disposition'] == (
+            'filename=legaltext_export_2016-01-02_09-21-55.zip')

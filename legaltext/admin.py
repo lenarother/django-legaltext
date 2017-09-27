@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
+from .actions import Exporter
 from .models import LegalText, LegalTextCheckbox, LegalTextVersion
 from .utils import InitialExtraStackedInline
 
@@ -26,10 +27,24 @@ class LegalTextVersionAdminForm(forms.ModelForm):
         super(LegalTextVersionAdminForm, self).__init__(*args, **kwargs)
 
 
+class LegalTextAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = LegalText
+        fields = '__all__'
+
+    def clean_url_name(self):
+        url_name = self.cleaned_data['url_name']
+        if not url_name:
+            return None
+        return url_name
+
+
 @admin.register(LegalText)
 class LegalTextAdmin(admin.ModelAdmin):
     list_display = ('name', 'current_version_link', 'add_new_version_link')
     search_fields = ('name',)
+    form = LegalTextAdminForm
 
     def get_prepopulated_fields(self, request, obj=None):
         return {'slug': ('name',)} if obj is None else {}
@@ -87,6 +102,7 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
     list_filter = ('legaltext',)
     inlines = (LegalTextCheckboxInline,)
     form = LegalTextVersionAdminForm
+    actions = (Exporter.export_legaltext_version_action(),)
 
     def get_fieldsets(self, request, obj=None):
         if obj is None or obj.valid_from > timezone.now():
