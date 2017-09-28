@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.3.0
+~~~~~
+
+* Add legaltext_url templatetag for getting url from slug or name
+* Add admin action for legaltext version export
+* Enlarge legaltext slug and name fields to 128 characters
+* Bugfixes
+
 0.2.2
 ~~~~~
 

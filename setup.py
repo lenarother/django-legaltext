@@ -3,7 +3,7 @@ import sys
 from setuptools import find_packages, setup
 
 
-version = '0.2.2'
+version = '0.3.0'
 
 
 # TEMPORARY FIX FOR
