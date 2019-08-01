@@ -40,9 +40,9 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 
 install_requires = [
-    'Django>=1.9,<1.11.3',
+    'Django>=1.10,<2.2.5',
     'django-floppyforms>=1.7.0',
-    'django-markymark>=1.0.0',
+    'django-markymark>=2.1.0',
 ]
 
 
