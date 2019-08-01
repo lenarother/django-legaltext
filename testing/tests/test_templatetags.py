@@ -1,5 +1,5 @@
 import pytest
-from django.core.urlresolvers import NoReverseMatch
+from django.urls import NoReverseMatch
 from django.template import Context, Template
 from django.template.exceptions import TemplateSyntaxError
 
