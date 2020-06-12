@@ -3,7 +3,7 @@ import sys
 from setuptools import find_packages, setup
 
 
-version = '0.3.0'
+version = '1.0.0'
 
 
 # TEMPORARY FIX FOR
@@ -40,31 +40,25 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 
 install_requires = [
-    'Django>=1.11.23,<2.0',
-    'django-floppyforms>=1.7.0',
-    'django-markymark>=1.0.0',
+    'Django>=2',
+    'django-floppyforms>=1.8',
+    'django-markymark>=2.0',
 ]
 
 
 test_requires = [
-    'py>=1.4.26',
-    'pyflakes==2.1.1',
-    'pytest>=3.0.7',
-    'pytest-cache>=1.0',
-    'pytest-cov>=2.1.0',
-    'pytest-flakes>=4.0.0',
-    'pytest-isort==0.1.0',
-    'pytest-pep8>=1.0.6',
-    'pytest-django==3.5.0',
-    'fake-factory==0.7.4',
-    'factory-boy>=2.7.0,<2.8',
-    'freezegun>=0.3.7,<0.4',
+    'pytest>=5.3,<5.4',
+    'pytest-cov>=2.8.1,<3',
+    'pytest-django>=3.9.0,<4',
+    'pytest-flakes>=4.0.0,<5',
+    'pytest-isort>=0.3.1,<1',
+    'pytest-pep8>=1.0.6,<2',
+    'factory-boy==2.12.0,<3',
+    'freezegun>=0.3.15,<1',
+    'isort>=4.3.21,<4.4',
     'coverage>=4.0',
-    'mock>=1.3.0',
-    'pep8>=1.6.2',
     'tox',
     'tox-pyenv',
-    'isort==4.2.5'
 ]
 
 setup(

@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 from legaltext.fields import LegalTextField
@@ -8,8 +8,8 @@ from legaltext.models import LegalText
 
 class Survey(models.Model):
     name = models.CharField(max_length=255)
-    terms = models.ForeignKey(LegalText, related_name='+')
-    privacy = models.ForeignKey(LegalText, related_name='+')
+    terms = models.ForeignKey(LegalText, related_name='+', on_delete=models.CASCADE)
+    privacy = models.ForeignKey(LegalText, related_name='+', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

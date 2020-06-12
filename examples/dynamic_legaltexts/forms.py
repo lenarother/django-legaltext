@@ -13,6 +13,6 @@ class ParticipationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.survey = kwargs.pop('survey')
-        super(ParticipationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['accepted_privacy'] = LegalTextFormField(self.survey.privacy.slug)
         self.fields['accepted_terms'] = LegalTextFormField(self.survey.terms.slug)

@@ -24,12 +24,13 @@ class LegalTextField(models.ForeignKey):
             kwargs.setdefault('default', CurrentLegalText(slug))
             kwargs['limit_choices_to'] = {'legaltext__slug': slug}
         kwargs['related_name'] = '+'
+        kwargs['on_delete'] = models.PROTECT
         kwargs['blank'] = True
         kwargs['null'] = True
-        super(LegalTextField, self).__init__(to, **kwargs)
+        super().__init__(to, **kwargs)
 
     def deconstruct(self):
-        name, path, args, kwargs = super(LegalTextField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         kwargs['slug'] = self.slug
         return name, path, args, kwargs
 
@@ -40,7 +41,7 @@ class LegalTextFormField(forms.BooleanField):
         self.slug = slug
         kwargs.setdefault('widget', LegalTextWidget(self.slug))
         kwargs.setdefault('required', True)
-        super(LegalTextFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     label = property(lambda s: LegalText.current_version(s.slug).name, lambda s, v: None)
 

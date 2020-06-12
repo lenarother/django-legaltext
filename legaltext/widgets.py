@@ -1,7 +1,7 @@
 import floppyforms.__future__ as forms
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.utils.text import mark_safe
+from django.utils.safestring import mark_safe
 
 from .models import LegalText
 
@@ -13,8 +13,7 @@ class LegalTextWidget(forms.widgets.MultiWidget):
         self.version = LegalText.current_version(slug)
         self.checkboxes = list(self.version.checkboxes.all())
 
-        super(LegalTextWidget, self).__init__(
-            [forms.CheckboxInput() for checkbox in self.checkboxes], attrs)
+        super().__init__([forms.CheckboxInput() for checkbox in self.checkboxes], attrs)
 
     def get_template_name(self):
         if self.template_name:

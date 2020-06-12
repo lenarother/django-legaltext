@@ -2,6 +2,12 @@
 Changelog
 =========
 
+1.0.0
+~~~~~
+
+* BREAKING CHANGE: This version supports Python 3.6+ and Django 2.0+
+
+
 0.3.0
 ~~~~~
 

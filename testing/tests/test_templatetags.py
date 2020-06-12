@@ -1,7 +1,7 @@
 import pytest
-from django.core.urlresolvers import NoReverseMatch
 from django.template import Context, Template
 from django.template.exceptions import TemplateSyntaxError
+from django.urls import NoReverseMatch
 
 from testing.factories import LegalTextFactory
 

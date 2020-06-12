@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib import admin
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 from .actions import Exporter
 from .models import LegalText, LegalTextCheckbox, LegalTextVersion
@@ -24,7 +24,7 @@ class LegalTextVersionAdminForm(forms.ModelForm):
             if current_version:
                 kwargs.setdefault('initial', {})['content'] = current_version.content
 
-        super(LegalTextVersionAdminForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class LegalTextAdminForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class LegalTextAdmin(admin.ModelAdmin):
 
     def current_version_link(self, obj):
         version = obj.get_current_version()
-        return u'<a href="{0}">{1:%x %X}</a>'.format(
+        return '<a href="{0}">{1:%x %X}</a>'.format(
             reverse('admin:legaltext_legaltextversion_change', args=(version.pk,)),
             timezone.localtime(version.valid_from)
         )
@@ -62,10 +62,10 @@ class LegalTextAdmin(admin.ModelAdmin):
     current_version_link.short_description = _('Current version')
 
     def add_new_version_link(self, obj):
-        return u'<a href="{0}?legaltext={1}">{2}</a>'.format(
+        return '<a href="{0}?legaltext={1}">{2}</a>'.format(
             reverse('admin:legaltext_legaltextversion_add'),
             obj.pk,
-            ugettext('Add new version')
+            gettext('Add new version')
         )
     add_new_version_link.allow_tags = True
     add_new_version_link.short_description = _('Add new version')
@@ -106,7 +106,7 @@ class LegalTextVersionAdmin(admin.ModelAdmin):
 
     def get_fieldsets(self, request, obj=None):
         if obj is None or obj.valid_from > timezone.now():
-            return super(LegalTextVersionAdmin, self).get_fieldsets(request, obj)
+            return super().get_fieldsets(request, obj)
 
         return ((None, {'fields': ('legaltext', 'valid_from', 'rendered_content')}),)
 

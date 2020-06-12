@@ -1,8 +1,8 @@
 from django import template
 from django.conf import settings
-from django.core.urlresolvers import NoReverseMatch
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
+from django.urls import NoReverseMatch
+from django.utils.translation import gettext_lazy as _
 
 from ..models import LegalText
 

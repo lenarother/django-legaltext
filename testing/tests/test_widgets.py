@@ -1,5 +1,6 @@
+from unittest import mock
+
 import floppyforms.__future__ as forms
-import mock
 import pytest
 
 from legaltext.models import LegalTextVersion

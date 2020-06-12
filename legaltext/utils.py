@@ -3,10 +3,10 @@ Helper for admin inlines that support initial data
 Implementation based on:
 http://www.catharinegeek.com/how-to-set-initial-data-for-inline-model-formset-in-django/
 """
+from functools import partialmethod
 
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet, ModelForm
-from django.utils.functional import curry
 
 
 class InitialExtraInlineFormset(BaseInlineFormSet):
@@ -41,13 +41,13 @@ class InitialExtraStackedInline(admin.StackedInline):
     def get_extra(self, *args, **kwargs):
         if 'initial' in kwargs:
             return len(kwargs['initial'])
-        return super(InitialExtraStackedInline, self).get_extra(*args, **kwargs)
+        return super().get_extra(*args, **kwargs)
 
     def get_initial_extra(self, request, obj=None):
         return []
 
     def get_formset(self, request, obj=None, **kwargs):
         initial = self.get_initial_extra(request, obj)
-        formset = super(InitialExtraStackedInline, self).get_formset(request, obj, **kwargs)
-        formset.__init__ = curry(formset.__init__, initial=initial)
+        formset = super().get_formset(request, obj, **kwargs)
+        formset.__init__ = partialmethod(formset.__init__, initial=initial)
         return formset

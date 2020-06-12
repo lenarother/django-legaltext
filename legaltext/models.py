@@ -1,21 +1,21 @@
 import re
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import normalize_newlines
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from markymark.fields import MarkdownField
-from markymark.utils import render_markdown
+from markymark.renderer import render_markdown
 
 
-ANCHOR_RE = re.compile('\[anchor(?:\:([^\]]+))?\](?:(.+?)\[/anchor\])')
-BLOCK_OPEN_NL_RE = re.compile('(?:\n\n|\n)?(\[block\:[^\]]+\])(?:\n\n|\n)?', re.DOTALL)
-BLOCK_CLOSE_NL_RE = re.compile('(?:\n\n|\n)?(\[/block\])(?:\n\n|\n)?', re.DOTALL)
-BLOCK_OPEN_RE = re.compile('(?:<p>)?\[block\:([^\]]+)\](?:</p>)?')
-BLOCK_CLOSE_RE = re.compile('(?:<p>)?\[/block\](?:</p>)?')
+ANCHOR_RE = re.compile(r'\[anchor(?:\:([^\]]+))?\](?:(.+?)\[/anchor\])')
+BLOCK_OPEN_NL_RE = re.compile(r'(?:\n\n|\n)?(\[block\:[^\]]+\])(?:\n\n|\n)?', re.DOTALL)
+BLOCK_CLOSE_NL_RE = re.compile(r'(?:\n\n|\n)?(\[/block\])(?:\n\n|\n)?', re.DOTALL)
+BLOCK_OPEN_RE = re.compile(r'(?:<p>)?\[block\:([^\]]+)\](?:</p>)?')
+BLOCK_CLOSE_RE = re.compile(r'(?:<p>)?\[/block\](?:</p>)?')
 
 
 class LegalText(models.Model):
@@ -45,7 +45,7 @@ class LegalText(models.Model):
         if not version:
             version, created = LegalTextVersion.objects.get_or_create(legaltext=self)
             if created:
-                version.checkboxes.create(content=ugettext('I accept.'))
+                version.checkboxes.create(content=gettext('I accept.'))
 
         return version
 
@@ -54,7 +54,8 @@ class LegalText(models.Model):
 
 
 class LegalTextVersion(models.Model):
-    legaltext = models.ForeignKey(LegalText, verbose_name=_('Legal text'))
+    legaltext = models.ForeignKey(
+        LegalText, verbose_name=_('Legal text'), on_delete=models.CASCADE)
     valid_from = models.DateTimeField(_('Valid from'), default=timezone.now)
 
     content = MarkdownField(_('Text'), help_text=_(
@@ -112,7 +113,8 @@ class LegalTextVersion(models.Model):
 
 class LegalTextCheckbox(models.Model):
     legaltext_version = models.ForeignKey(
-        LegalTextVersion, verbose_name=_('Legal text version'), related_name='checkboxes')
+        LegalTextVersion, verbose_name=_('Legal text version'), related_name='checkboxes',
+        on_delete=models.CASCADE)
 
     content = MarkdownField(_('Text'), help_text=_(
         'You can use [anchor]Your text[/anchor] to create a link to the full legal text. '
@@ -128,7 +130,7 @@ class LegalTextCheckbox(models.Model):
         unique_together = (('legaltext_version', 'order'),)
 
     def __str__(self):
-        return ugettext('Checkbox for {0} ({1})').format(
+        return gettext('Checkbox for {0} ({1})').format(
             self.legaltext_version.name,
             '{0:%x %X}'.format(timezone.localtime(self.legaltext_version.valid_from))
         )
@@ -151,4 +153,4 @@ class LegalTextCheckbox(models.Model):
         if not self.order:
             self.order = (self.legaltext_version.checkboxes.aggregate(
                 next_order=models.Max('order'))['next_order'] or 0) + 1
-        super(LegalTextCheckbox, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)

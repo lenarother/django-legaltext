@@ -20,7 +20,7 @@ class LegaltextView(DetailView):
         return overrides.get(self.object.slug, template_name)
 
     def get_context_data(self, **kwargs):
-        context = super(LegaltextView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         legaltext_version = self.object.get_current_version()
         context.update({

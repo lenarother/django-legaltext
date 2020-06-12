@@ -37,7 +37,7 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = tempfile.mkdtemp()
 STATIC_URL = '/static/'
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -45,7 +45,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
 
 TEMPLATES = [
     {

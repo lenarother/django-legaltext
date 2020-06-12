@@ -13,6 +13,6 @@ class ParticipationForm(forms.ModelForm):
         exclude = ('date_submit',)
 
     def __init__(self, *args, **kwargs):
-        super(ParticipationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['accepted_privacy'] = LegalTextFormField(PRIVACY_SLUG)
         self.fields['accepted_terms'] = LegalTextFormField(TERMS_SLUG)
