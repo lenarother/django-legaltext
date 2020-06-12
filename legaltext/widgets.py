@@ -35,7 +35,7 @@ class LegalTextWidget(forms.widgets.MultiWidget):
         # Checkboxes are by default empty.
         return [None for checkbox in self.checkboxes]
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if self.is_localized:
             for widget in self.widgets:
                 widget.is_localized = self.is_localized
